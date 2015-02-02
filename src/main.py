@@ -14,4 +14,4 @@ if __name__ == '__main__':
 
     pcap_file=PcapFile(input_file)
     test=pcap_file.getPcapHeader()
-    print test                                                                                                                                                 
+    print test
