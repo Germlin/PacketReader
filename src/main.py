@@ -1,6 +1,11 @@
 # -*- encoding=cp936 -*-
 
+__author__ = 'Reuynil'
+
 from input import *
+from ethernet import *
+import sys
+
 
 if __name__ == '__main__':
     file_name = "weather_channel_android_app.pcap"
@@ -15,5 +20,13 @@ if __name__ == '__main__':
     pcap_file = PcapFile(input_file)
     test = pcap_file.getPcapHeader()
     print test
-    print len(pcap_file)
-    print pcap_file.getPacketHeaderNum()
+    print pcap_file.packetNum()
+
+    #测试是否能够把每个packet从pcap文件上剥离下来，成功
+    pkt=pcap_file.getPacket()
+    print type(pkt),len(pkt),type(pkt[0].getData())
+
+    eth=ethernet(pkt[0])
+    print eth.getDst()
+    print eth.getType()
+    print eth.isIP()

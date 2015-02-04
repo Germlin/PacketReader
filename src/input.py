@@ -1,7 +1,8 @@
 # -*- encoding=cp936 -*-
 
+__author__ = 'Reuynil'
+
 import os
-import sys
 import types
 import collections
 import struct
@@ -11,9 +12,9 @@ class PcapHeader:
     '''
     This is the header of Pcap file.
     '''
-    __field = collections.OrderedDict()
 
     def __init__(self, pcapFile):
+        self.__field = collections.OrderedDict()
         if (type(pcapFile) == types.FileType):
             if (not pcapFile.closed):
                 pcapFile.seek(0, 0)
@@ -38,9 +39,9 @@ class PacketHeader:
     '''
     This is the header of Packet
     '''
-    __field = collections.OrderedDict()
 
     def __init__(self, pcapFile, whence):
+        self.__field = collections.OrderedDict()
         self.__fieldItem = ['TimestampSec', 'TimestampMSe', 'Caplen', 'Length']
         if (type(pcapFile) == types.FileType):
             if (not pcapFile.closed):
@@ -68,7 +69,8 @@ class PcapFile:
         self.__pcapLength = int(os.path.getsize(fileName))
         self.__pcapFile = open(fileName, 'rb')
         self.__pcapHeader = PcapHeader(self.__pcapFile)
-        self.getPacketHeader()
+        self.__packet=list()
+        self.__getPacket()
 
     def __len__(self):
         return self.__pcapLength
@@ -79,21 +81,36 @@ class PcapFile:
     def __del__(self):
         self.__pcapFile.close()
 
-    def getPacketHeader(self):
-        self.__packetHeader = []
+    def __getPacket(self):
         whence = 24
+        index=0
         while whence < self.__pcapLength:
-            x = PacketHeader(self.__pcapFile, whence)
-            whence = whence + x.getPacketLength() + 16
-            self.__packetHeader.append(x)
+            header = PacketHeader(self.__pcapFile, whence)
+            dataLength = header.getPacketLength()
+            data = self.__pcapFile.read(dataLength)
+            packet=Packet(header,data,index)
+            self.__packet.append(packet)
+            whence = whence + dataLength + 16
+            index = index +1
 
-    def getPacketHeaderNum(self):
-        return len(self.__packetHeader)
+    def packetNum(self):
+        return len(self.__packet)
 
-    def getPacketData(self):
-        pass
+    def getPacket(self):
+        return self.__packet
 
     def followTCPstream(self, ip):
         pass
 
-        
+
+class Packet:
+    def __init__(self,packet_header,packet_data,index):
+        self.__packetHeader=packet_header
+        self.__packetData=packet_data
+        self.__index=index
+
+    def getData(self):
+        return self.__packetData
+
+    def getHeader(self):
+        return self.__packetHeader
