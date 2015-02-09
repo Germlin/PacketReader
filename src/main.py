@@ -36,5 +36,6 @@ if __name__ == '__main__':
     ip = ip(eth)
     print ip.getDst()
     print ip.getSrc()
-    print ip.fields["HeaderLength"], ip.fields["Checksum"]
+    print ip.fields["HeaderLength"]
+    print ip.getProtocol()
     print ip.checkSum()
