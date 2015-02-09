@@ -4,6 +4,7 @@ __author__ = 'Reuynil'
 
 from input import *
 from ethernet import *
+from ip import *
 import sys
 
 
@@ -30,3 +31,10 @@ if __name__ == '__main__':
     print eth.getDst()
     print eth.getType()
     print eth.isIP()
+
+    # ≤‚ ‘IP
+    ip = ip(eth)
+    print ip.getDst()
+    print ip.getSrc()
+    print ip.fields["HeaderLength"], ip.fields["Checksum"]
+    print ip.checkSum()
