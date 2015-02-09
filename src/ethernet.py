@@ -47,8 +47,5 @@ class ethernet:
                 return k
         return 'ETH_TYPE_NONE'
 
-    # def isIP(self):
-    # return self.type == '0800'
-
     def getData(self):
         return self.__data[14:]

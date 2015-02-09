@@ -79,7 +79,7 @@ def tokenization(data):
 
 
 if __name__ == "__main__":
-    f = open('text.txt', 'rb')
+    f = open('test_text.txt', 'rb')
     data = f.read()
     print data.encode('hex')
     token = tokenization(data)
