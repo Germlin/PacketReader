@@ -194,7 +194,7 @@ class ip:
         for k, v in g.iteritems():
             if k.startswith('IP_PROTO_') and v == self.fields["Protocol"]:
                 return k
-
+        return 'IP_PROTO_NONE'
 
     def getData(self):
         pass

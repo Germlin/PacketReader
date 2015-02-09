@@ -25,15 +25,13 @@ if __name__ == '__main__':
 
     #测试是否能够把每个packet从pcap文件上剥离下来，成功
     pkt=pcap_file.getPacket()
-    print type(pkt),len(pkt),type(pkt[0].getData())
-
     eth=ethernet(pkt[0])
     print eth.getDst()
     print eth.getType()
-    print eth.isIP()
 
     # 测试IP
     ip = ip(eth)
+    print '-' * 60
     print ip.getDst()
     print ip.getSrc()
     print ip.fields["HeaderLength"]
