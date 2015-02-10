@@ -1,15 +1,18 @@
 # Discover
 An automatic protocol reverse engineering
 
-## À´Ô´
-DiscoverÊÇÒ»¸ö×Ô¶¯»¯µÄĞ­ÒéÄæÏò·ÖÎö¹¤¾ß£¬ËüµÄÖ÷ÒªË¼ÏëÀ´×ÔÓÚÒ»ÆªÂÛÎÄ¡¶Discover : an automatic protocol reverse engineering¡·
+## æ¥æº
+Discoveræ˜¯ä¸€ä¸ªè‡ªåŠ¨åŒ–çš„åè®®é€†å‘åˆ†æå·¥å…·ï¼Œå®ƒçš„ä¸»è¦æ€æƒ³æ¥è‡ªäºä¸€ç¯‡è®ºæ–‡ã€ŠDiscover : an automatic protocol reverse engineeringã€‹
 
-## ´úÂë½á¹¹
-Discover---input ´æ·ÅÒª´¦ÀíµÄPCAPÎÄ¼ş
+## ä»£ç ç»“æ„
+Discover---input å­˜æ”¾è¦å¤„ç†çš„PCAPæ–‡ä»¶
+
         |
-        |--output ´æ·ÅÊä³öµÄ½á¹û
+        
+        |--output å­˜æ”¾è¾“å‡ºçš„ç»“æœ
+        
         |
-        |--src---input.py Ô´´úÂë
+        |--src---input.py æºä»£ç 
               |--ethernet.py
               |--ip.py
               |--tcp.py
@@ -17,5 +20,5 @@ Discover---input ´æ·ÅÒª´¦ÀíµÄPCAPÎÄ¼ş
               |--main.py
               |--test\_\*
 
-## ²Î¿¼
+## å‚è€ƒ
 + dpkt
