@@ -2,9 +2,7 @@
 
 __author__ = 'Reuynil'
 
-from input import *
-from ethernet import *
-from ip import *
+from utility import *
 import sys
 
 

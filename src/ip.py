@@ -171,6 +171,7 @@ class ip:
                        "DestinationIP": None,
                        "Options": None}
         self.__data = eth.getData()
+        self.fields["Identification"] = self.__getFiled(4, 0, 16)
         self.fields["SourceIP"] = self.__data[12:16]
         self.fields["DestinationIP"] = self.__data[16:20]
         self.fields["HeaderLength"] = self.__getFiled(0, 4, 4) * 4
@@ -197,7 +198,10 @@ class ip:
         return 'IP_PROTO_NONE'
 
     def getData(self):
-        pass
+        return self.__data[self.fields["HeaderLength"]:]
+
+    def getID(self):
+        return self.fields["Identification"]
 
     def __getFiled(self, byteOffset, bitOffset, length):
         '''
@@ -223,9 +227,3 @@ class ip:
             i += 2
         check_sum = (check_sum >> 16) + (check_sum & 0xffff)
         return check_sum == 0xffff
-
-
-def resumble(packet_list, dst, src):
-    pass
-
-

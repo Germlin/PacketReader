@@ -69,7 +69,7 @@ class PcapFile:
         self.__pcapLength = int(os.path.getsize(fileName))
         self.__pcapFile = open(fileName, 'rb')
         self.__pcapHeader = PcapHeader(self.__pcapFile)
-        self.__packet=list()
+        self.__packet = list()
         self.__getPacket()
 
     def __len__(self):
@@ -83,15 +83,15 @@ class PcapFile:
 
     def __getPacket(self):
         whence = 24
-        index=0
+        index = 0
         while whence < self.__pcapLength:
             header = PacketHeader(self.__pcapFile, whence)
             dataLength = header.getPacketLength()
             data = self.__pcapFile.read(dataLength)
-            packet=Packet(header,data,index)
+            packet = Packet(header, data, index)
             self.__packet.append(packet)
             whence = whence + dataLength + 16
-            index = index +1
+            index = index + 1
 
     def packetNum(self):
         return len(self.__packet)
@@ -99,15 +99,16 @@ class PcapFile:
     def getPacket(self):
         return self.__packet
 
-    def followTCPstream(self, ip):
-        pass
-
 
 class Packet:
-    def __init__(self,packet_header,packet_data,index):
-        self.__packetHeader=packet_header
-        self.__packetData=packet_data
-        self.__index=index
+    '''
+    每一个packet包括了已经分出来的packet_header，packet_data和index。
+    '''
+
+    def __init__(self, packet_header, packet_data, index):
+        self.__packetHeader = packet_header
+        self.__packetData = packet_data
+        self.index = index
 
     def getData(self):
         return self.__packetData
