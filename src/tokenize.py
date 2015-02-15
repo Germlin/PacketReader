@@ -2,6 +2,7 @@
 
 __author__ = 'Reuynil'
 
+from utility import *
 
 class Text:
     def __init__(self, string_data):
@@ -10,22 +11,6 @@ class Text:
 
     def __str__(self):
         return self.data.decode('utf8').encode('gbk')
-
-
-def testBit(int_data, offset):
-    '''
-    测试某一位是否为1
-    :param int_data: int类型的数据
-    :param offset: 要测试的位，最高位为7
-    :return:是1的时候返回True
-    '''
-    mask = 0b00000001 << offset
-    return bool(int_data & mask)
-
-
-def byteToInt(byte_data):
-    return int(byte_data.encode('hex'), 16)
-
 
 def tokenization(data):
     '''

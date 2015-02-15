@@ -4,6 +4,8 @@ __author__ = 'Reuynil'
 
 '''包括IP数据报的类，同时还有一个函数，把一个已经分片的IP数据报重组'''
 
+from utility import *
+
 # Protocol (ip_p) - http://www.iana.org/assignments/protocol-numbers
 IP_PROTO_IP = 0  # dummy for IP
 IP_PROTO_HOPOPTS = IP_PROTO_IP  # IPv6 hop-by-hop options
@@ -227,3 +229,27 @@ class ip:
             i += 2
         check_sum = (check_sum >> 16) + (check_sum & 0xffff)
         return check_sum == 0xffff
+
+    def fragment(self):
+        '''
+        判断ip数据报是否可以分片
+        :return:True代表可以分片，False代表不可以分片
+        '''
+        Flag = self.__data[6]
+        return testBit(Flag, 1) == 0
+
+    def moreFragment(self):
+        '''
+        判断ip数据报是不是最后一个分片
+        :return:True是最后一个分片，False不是最后一个分片
+        '''
+        Flag = self.__data[6]
+        return testBit(Flag, 2) == 1
+
+
+class ipDatagram:
+    def __init__(self, dst, src, protocol, data):
+        self.dst = dst
+        self.src = src
+        self.protocol = protocol
+        self.data = data
