@@ -5,6 +5,7 @@ __author__ = 'Reuynil'
 '''包括IP数据报的类，同时还有一个函数，把一个已经分片的IP数据报重组'''
 
 from utility import *
+from ethernet import *
 
 # Protocol (ip_p) - http://www.iana.org/assignments/protocol-numbers
 IP_PROTO_IP = 0  # dummy for IP
@@ -177,8 +178,10 @@ class ip:
         self.fields["SourceIP"] = self.__data[12:16]
         self.fields["DestinationIP"] = self.__data[16:20]
         self.fields["HeaderLength"] = self.__getFiled(0, 4, 4) * 4
+        self.fields["TotalLength"] = self.__getFiled(2, 0, 16)
         self.fields["Checksum"] = self.__getFiled(10, 0, 8)
         self.fields["Protocol"] = self.__getFiled(9, 0, 8)
+        self.fields["FragmentOffset"] = self.__getFiled(6, 3, 13) * 8
 
     def getDst(self):
         s = list()
@@ -205,14 +208,22 @@ class ip:
     def getID(self):
         return self.fields["Identification"]
 
+    def getTotalLength(self):
+        return self.fields["TotalLength"]
+
+    def getHeaderLength(self):
+        return self.fields["HeaderLength"]
+
+    def getOffset(self):
+        return self.fields["FragmentOffset"]
+
     def __getFiled(self, byteOffset, bitOffset, length):
         '''
         获取header指定的数据域，比如第四个字节的后四位。
-        :param header: 数据头，字节流
         :param byteOffset: 数据域开始的字节位置
         :param bitOffset: 数据域开始的位位置
         :param length: 数据域的长度，按照bit计算
-        :return:int类型，不足一个字节的，在高位补0，然后再转成十进制
+        :return:int类型，不足一个字节的，在高位补0，然后再转成十进制,按字节计算
         '''
         byteLength = (length - (8 - bitOffset)) / 8 + 1
         data = self.__data[byteOffset:byteOffset + byteLength]
@@ -253,3 +264,75 @@ class ipDatagram:
         self.src = src
         self.protocol = protocol
         self.data = data
+
+
+class hole_descriptor:
+    def __init__(self, f=0, l=204800):
+        self.first = f
+        self.last = l
+
+
+def reassembleIP(pcap):
+    '''
+
+    :param packet_list: packet数据类型，是一个list
+    :param dst:
+    :param src:
+    :return:
+    '''
+    res = list()
+    work_list = dict()
+    packet_list = pcap.getPacket()
+    for packet in packet_list:
+        temp_eth = ethernet(packet)
+        if temp_eth.getType() == 'ETH_TYPE_IP':  # 判断是不是ip数据报
+            temp_ip = ip(temp_eth)
+            if temp_ip.checkSum() == True:  # 判断ip数据报是不是有错误
+                if temp_ip.fragment == True:
+                    temp_ip_id = temp_ip.getID()
+                    if work_list.has_key(temp_ip_id):
+                        work_list[temp_ip_id].append(temp_ip)
+                    else:
+                        value = list()
+                        value.append(temp_ip)
+                        work_list[temp_ip_id] = value
+                else:  # 不能分片
+                    # temp_ip_id = temp_ip.getID()
+                    res.append(ipDatagram(temp_ip.getDst(), temp_ip.getSrc(), temp_ip.getProtocol(), temp_ip.getData()))
+
+    for key, value in work_list:
+        '''
+        if len(work_list[key]) == 1:
+            res.append(ipDatagram(work_list[key][0].getDst(), work_list[key][0].getSrc(), work_list[key][0].getProtocol(), work_list[key][0].getData()))
+        else:
+        '''
+        temp_ip_list = work_list[key]
+        temp_dst = temp_ip_list[0].getDst()
+        temp_src = temp_ip_list[0].getSrc()
+        temp_protocol = temp_ip_list[0].getProtocol()
+        temp_data = list()
+        temp_data.insert(0, '')
+        hole_descriptor_list = list()
+        hole_descriptor_list.append(hole_descriptor())
+        for fragment in temp_ip_list:
+            assert isinstance(fragment, ip)
+            fragment_first = fragment.getOffset()
+            fragment_last = fragment.getOffset() + (fragment.getTotalLength() - fragment.getHeaderLength())
+            for hole in hole_descriptor_list:
+                hole_first = hole.first
+                hole_last = hole.last
+                if fragment_first <= hole_first and fragment_last >= hole_last:
+                    index = hole_descriptor_list.index(hole)
+                    hole_descriptor_list.remove(hole)
+                    temp_data.insert(index + 1, fragment.getData())
+                    if fragment_first > hole_first:
+                        new_hole = hole(hole_first, fragment_first - 1)
+                        hole_descriptor_list.append(new_hole)
+                    if fragment_last < hole_last and fragment.moreFragment == True:
+                        new_hole = hole(fragment_last + 1, hole_last)
+                        hole_descriptor_list.append(new_hole)
+        data = None
+        for d in temp_data:
+            data = data + temp_data
+        res.append(ipDatagram(temp_dst, temp_src, temp_protocol, data))
+    return res

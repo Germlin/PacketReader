@@ -3,8 +3,10 @@
 __author__ = 'Reuynil'
 
 from utility import *
-import sys
-
+from input import *
+from ethernet import *
+from ip import *
+from tcp import *
 
 if __name__ == '__main__':
     file_name = "weather_channel_android_app.pcap"
@@ -35,3 +37,7 @@ if __name__ == '__main__':
     print ip.fields["HeaderLength"]
     print ip.getProtocol()
     print ip.checkSum()
+    print len(ip.getData() + '')
+
+    for ls in reassembleIP(pcap_file):
+        print ls.dst
