@@ -2,7 +2,7 @@
 An automatic protocol reverse engineering
 
 ## 来源
-Discover是一个自动化的协议逆向分析工具，它的主要思想来自于一篇论文《Discover : an automatic protocol reverse engineering》。
+Discover is an automatic protocol reverse engineering. The idea of this tool is from *Discover : an automatic protocol reverse engineering*。
 
 ## 代码规则
 + ethernet、ip、tcp这些以协议名称命名的类的构造函数传入上一层数据包的**全部**数据，例如：
@@ -14,11 +14,12 @@ Discover是一个自动化的协议逆向分析工具，它的主要思想来自于一篇论文《Discover : a
 
 ## 代码结构
 ```
-Discover---input 存放要处理的PCAP文件
+Discover---input store the pcap file to deal with
         |
-        |--output 存放输出的结果
+        |--output store the result
         |
-        |--src---input.py 源代码
+        |--src---input.py source files
+              |--utility.py all the other source files will import this file.
               |--ethernet.py
               |--ip.py
               |--tcp.py

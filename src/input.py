@@ -2,11 +2,7 @@
 
 __author__ = 'Reuynil'
 
-import os
-import types
-import collections
-import struct
-
+from utility import *
 
 class PcapHeader:
     '''
@@ -102,7 +98,7 @@ class PcapFile:
 
 class Packet:
     '''
-    每一个packet包括了已经分出来的packet_header，packet_data和index。
+    Parse each packet to packet_header，packet_data and index。
     '''
 
     def __init__(self, packet_header, packet_data, index):

@@ -2,8 +2,6 @@
 
 __author__ = 'Reuynil'
 
-'''包括IP数据报的类，同时还有一个函数，把一个已经分片的IP数据报重组'''
-
 from utility import *
 from ethernet import *
 
@@ -217,6 +215,7 @@ class ip:
     def getOffset(self):
         return self.fields["FragmentOffset"]
 
+    # TODO: this function have been defined in utility.py, I should remove it from this class.
     def __getFiled(self, byteOffset, bitOffset, length):
         '''
         获取header指定的数据域，比如第四个字节的后四位。
@@ -266,6 +265,7 @@ class ipDatagram:
         self.data = data
 
 
+# Needed for the function reassembleIP()
 class hole_descriptor:
     def __init__(self, f=0, l=204800):
         self.first = f
@@ -297,15 +297,10 @@ def reassembleIP(pcap):
                         value.append(temp_ip)
                         work_list[temp_ip_id] = value
                 else:  # 不能分片
-                    # temp_ip_id = temp_ip.getID()
                     res.append(ipDatagram(temp_ip.getDst(), temp_ip.getSrc(), temp_ip.getProtocol(), temp_ip.getData()))
 
+    # The idea of the algorithm is from RFC815
     for key, value in work_list:
-        '''
-        if len(work_list[key]) == 1:
-            res.append(ipDatagram(work_list[key][0].getDst(), work_list[key][0].getSrc(), work_list[key][0].getProtocol(), work_list[key][0].getData()))
-        else:
-        '''
         temp_ip_list = work_list[key]
         temp_dst = temp_ip_list[0].getDst()
         temp_src = temp_ip_list[0].getSrc()

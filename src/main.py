@@ -39,5 +39,9 @@ if __name__ == '__main__':
     print ip.checkSum()
     print len(ip.getData() + '')
 
-    for ls in reassembleIP(pcap_file):
-        print ls.dst
+    # for ls in reassembleIP(pcap_file):
+    #    print ls.dst
+
+    test_file = open('test_text.txt', 'rb')
+    test_data = test_file.readline()
+    print getFiled(test_data, 0, 0, 8)
