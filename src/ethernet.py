@@ -1,5 +1,8 @@
 # -*- encoding=cp936 -*-
 
+from utility import *
+from input import *
+
 __author__ = 'Reuynil'
 
 # Ethernet payload types - http://standards.ieee.org/regauth/ethertype
