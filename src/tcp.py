@@ -22,6 +22,8 @@ class TCP:
         pass
 
 
-def reassembleTCP():
-    pass
+def reassembleTCP(pcap):
+    assert isinstance(pcap, pcap)
+    IP_packet = reassembleIP(pcap)
+
 
