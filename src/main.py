@@ -8,6 +8,14 @@ from ethernet import *
 from ip import *
 from tcp import *
 
+# TODO：
+# the follow statment is same, use the first kind.
+# print(int.from_bytes(data[0:1],byteorder='big',signed=False))
+# print(int(base64.b16encode(data[0:1]),16))
+
+
+
+
 if __name__ == '__main__':
     file_name = "weather_channel_android_app.pcap"
     # do not edit.
@@ -20,42 +28,44 @@ if __name__ == '__main__':
 
     pcap_file = PcapFile(input_file)
     test = pcap_file.getPcapHeader()
-    print test
-    print pcap_file.packetNum()
+    print(test)
+    print((pcap_file.packetNum()))
 
     #测试是否能够把每个packet从pcap文件上剥离下来，成功
     pkt=pcap_file.getPacket()
     eth = ethernet(pkt[12])
-    print eth.getDst()
-    print eth.getType()
+    print((eth.getDst()))
+    print((eth.getType()))
 
     # 测试IP
     ipd = ip(eth)
-    print '-' * 60
-    print ipd.getDst()
-    print ipd.getSrc()
-    print ipd.fields["HeaderLength"]
-    print ipd.getProtocol()
-    print ipd.checkSum()
-    print len(ipd.getData() + '')
+    print(('-' * 60))
+    print((ipd.getDst()))
+    print((ipd.getSrc()))
+    print((ipd.fields["HeaderLength"]))
+    print((ipd.getProtocol()))
+    print((ipd.checkSum()))
+    print((len(ipd.getData())))
 
     # test cast for the function reassembleIP in ip.py
-    print '-' * 10, ' test for reassembleIP ', '-' * 10
+    print('-' * 10 + ' test for reassembleIP ' + '-' * 10)
     test_file_name = "test_ping_ip_reassemble.pcap"
     test_input_file = os.path.join(input_path, test_file_name)
     test_pcap_file = PcapFile(test_input_file)
-    print "This pcap file has %d packets." % test_pcap_file.packetNum()
+    print(("This pcap file has %d packets." % test_pcap_file.packetNum()))
     test_packet = test_pcap_file.getPacket()[0]
     test_eth = ethernet(test_packet)
-    print "The type of the first packet is %s " % test_eth.getType()
+    print(("The type of the first packet is %s " % test_eth.getType()))
     test_ip = ip(test_eth)
-    print "the checksum of the ip datagram is %s" % test_ip.fields["Checksum"]
-    print test_ip.fragment(), test_ip.moreFragment()
-    res = reassembleIP(test_pcap_file)[1]
-    print len(res.getData())
+    print(("the checksum of the ip datagram is %s" % test_ip.fields["Checksum"]))
+    print((test_ip.fragment(), test_ip.moreFragment()))
+    res = reassembleIP(test_pcap_file)
+    print(len(res))
+    res1 = res[1]
+    print((len(res1.getData())))
 
-    print '\n', '-' * 10, 'i dont know ', '-' * 10
+    print('\n' + '-' * 10 + 'i dont know ' + '-' * 10)
     test_file = open('test_text.txt', 'rb')
     test_data = test_file.readline()
 
-    print getFiled(test_data, 0, 0, 8)
+    print((getFiled(test_data, 0, 0, 8)))

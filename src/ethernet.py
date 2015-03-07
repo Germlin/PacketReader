@@ -2,6 +2,7 @@
 
 from utility import *
 from input import *
+import base64
 
 __author__ = 'Reuynil'
 
@@ -27,26 +28,26 @@ ETH_TYPE_LLDP = 0x88CC  # Link Layer Discovery Protocol
 class ethernet:
     def __init__(self, packet):
         self.__data = packet.getData()
-        self.dst = self.__data[0:6].encode('hex')
-        self.src = self.__data[6:12].encode('hex')
-        self.type = self.__data[12:14].encode('hex')
+        self.dst = self.__data[0:6]
+        self.src = self.__data[6:12]
+        self.type = self.__data[12:14]
 
     def getDst(self):
         s = list()
         for i in range(6):
-            s.append(self.dst[i * 2:i * 2 + 2])
-        return ":".join(s)
+            s.append(base64.b16encode(self.dst[i:i + 1]))
+        return str(b":".join(s))[2:-1]
 
     def getSrc(self):
         s = list()
         for i in range(6):
-            s.append(self.src[i * 2:i * 2 + 2])
-        return ":".join(s)
+            s.append(base64.b16encode(self.src[i:i + 1]))
+        return str(b":".join(s))[2:-1]
 
     def getType(self):
         g = globals()
-        for k, v in g.iteritems():
-            if k.startswith('ETH_TYPE_') and v == int(self.type, 16):
+        for k, v in list(g.items()):
+            if k.startswith('ETH_TYPE_') and v == int(base64.b16encode(self.type), 16):
                 return k
         return 'ETH_TYPE_NONE'
 

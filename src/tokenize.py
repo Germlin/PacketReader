@@ -7,7 +7,7 @@ from utility import *
 class Text:
     def __init__(self, string_data):
         self.data = string_data
-        print type(self.data), repr(self.data)
+        print(type(self.data), repr(self.data))
 
     def __str__(self):
         return self.data.decode('utf8').encode('gbk')
@@ -27,7 +27,7 @@ def tokenization(data):
         if not testBit(first_byte_int, 7):
             try:
                 decode_data = first_byte.decode('ascii')
-            except Exception, e:
+            except Exception as e:
                 token_patten.append('B')
             else:
                 token_patten.append(Text(first_byte))
@@ -47,14 +47,14 @@ def tokenization(data):
                 remain_byte_length = 6 - i
                 try:
                     remain_byte = data[k + 1:k + remain_byte_length + 1]
-                except Exception, e:
+                except Exception as e:
                     token_patten.append('B')
                     k += 1
                 else:
                     full_byte = first_byte + remain_byte
                     try:
                         decode_data = full_byte.decode('utf8')
-                    except Exception, e:
+                    except Exception as e:
                         token_patten.append('B')
                         k += 1
                     else:
@@ -66,8 +66,8 @@ def tokenization(data):
 if __name__ == "__main__":
     f = open('test_text.txt', 'rb')
     data = f.read()
-    print data.encode('hex')
+    print(data.encode('hex'))
     token = tokenization(data)
-    print '=' * 60
+    print('=' * 60)
     for item in token:
-        print item
+        print(item)

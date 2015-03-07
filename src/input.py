@@ -3,6 +3,7 @@
 __author__ = 'Reuynil'
 
 from utility import *
+import base64
 
 class PcapHeader:
     '''
@@ -10,25 +11,21 @@ class PcapHeader:
     '''
 
     def __init__(self, pcapFile):
-        self.__field = collections.OrderedDict()
-        if (type(pcapFile) == types.FileType):
-            if (not pcapFile.closed):
-                pcapFile.seek(0, 0)
-                self.__field['Magic'] = pcapFile.read(4).encode('hex')
-                self.__field['Major'] = pcapFile.read(2).encode('hex')
-                self.__field['Minor'] = pcapFile.read(2).encode('hex')
-                self.__field['ThisZone'] = pcapFile.read(4).encode('hex')
-                self.__field['SigFigs'] = pcapFile.read(4).encode('hex')
-                self.__field['SanpLen'] = pcapFile.read(4).encode('hex')
-                self.__field['LinkType'] = pcapFile.read(4).encode('hex')
-        else:
-            print "Can not open the pcapFile."
+        self.field = collections.OrderedDict()
+        pcapFile.seek(0, 0)
+        self.field['Magic'] = pcapFile.read(4)
+        self.field['Major'] = pcapFile.read(2)
+        self.field['Minor'] = pcapFile.read(2)
+        self.field['ThisZone'] = pcapFile.read(4)
+        self.field['SigFigs'] = pcapFile.read(4)
+        self.field['SanpLen'] = pcapFile.read(4)
+        self.field['LinkType'] = pcapFile.read(4)
 
     def __str__(self):
-        str = ''
-        for key in self.__field:
-            str = str + key.ljust(16) + self.__field[key] + '\n'
-        return str
+        string = ''
+        for key in self.field:
+            string = string + key.ljust(16) + str(base64.b16encode(self.field[key]))[2:-1] + '\n'
+        return string
 
 
 class PacketHeader:
@@ -37,26 +34,22 @@ class PacketHeader:
     '''
 
     def __init__(self, pcapFile, whence):
-        self.__field = collections.OrderedDict()
-        self.__fieldItem = ['TimestampSec', 'TimestampMSe', 'Caplen', 'Length']
-        if (type(pcapFile) == types.FileType):
-            if (not pcapFile.closed):
-                pcapFile.seek(whence, 0)
-                fieldData = struct.unpack('4I', pcapFile.read(16))
-                index = 0
-                for key in self.__fieldItem:
-                    self.__field[key] = fieldData[index]
-                    index = index + 1
-        else:
-            print "Can not open the pcapFile."
+        self.field = collections.OrderedDict()
+        self.fieldItem = ['TimestampSec', 'TimestampMSe', 'Caplen', 'Length']
+        pcapFile.seek(whence, 0)
+        fieldData = struct.unpack('4I', pcapFile.read(16))
+        index = 0
+        for key in self.fieldItem:
+            self.field[key] = fieldData[index]
+            index = index + 1
 
     def getPacketLength(self):
-        return self.__field['Caplen']
+        return self.field['Caplen']
 
     def __str__(self):
         tempStr = ''
-        for key in self.__field:
-            tempStr = tempStr + key.ljust(16) + str(self.__field[key]) + '\n'
+        for key in self.field:
+            tempStr = tempStr + key.ljust(16) + str(self.field[key]) + '\n'
         return tempStr
 
 

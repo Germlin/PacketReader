@@ -30,3 +30,11 @@ Discover---input store the pcap file to deal with
 
 ## ²Î¿¼
 + dpkt
+
+# TODO£º
++ the follow statment is same, use the first kind.
+  ```
+  print(int.from_bytes(data[0:1],byteorder='big',signed=False))
+  print(int(base64.b16encode(data[0:1]),16))
+  ```
++ use the ```struct.unpack()```, but not always use ```read()```

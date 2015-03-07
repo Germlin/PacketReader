@@ -7,7 +7,7 @@ import types
 import collections
 import struct
 import sys
-
+import base64
 
 def testBit(int_data, offset):
     '''
@@ -19,12 +19,13 @@ def testBit(int_data, offset):
     mask = 0b00000001 << offset
     return bool(int_data & mask)
 
-
 def byteToInt(byte_data):
-    return int(byte_data.encode('hex'), 16)
+    res = int.from_bytes(byte_data, byteorder='big', signed=False)
+    bd = base64.b16encode(byte_data)
+    return res
 
 
-def getFiled(data, byteOffset, bitOffset, length):
+def getFiled(dataIn, byteOffset, bitOffset, length):
     '''
     获取header指定的数据域，比如第四个字节的后四位。
     Example:
@@ -35,10 +36,10 @@ def getFiled(data, byteOffset, bitOffset, length):
     :param length: 数据域的长度，按照bit计算
     :return:int类型，不足一个字节的，在高位补0，然后再转成十进制,按字节计算
     '''
-    byteLength = (length - (8 - bitOffset)) / 8 + 1
-    data = data[byteOffset:byteOffset + byteLength]
+    byteLength = (length - (8 - bitOffset)) // 8 + 1
+    data = dataIn[byteOffset:(byteOffset + byteLength)]
     mask = 2 ** (byteLength * 8 - bitOffset) - 1
-    data_int = int(data.encode('hex'), 16)
+    data_int = int(base64.b16encode(data), 16)
     res = data_int & mask
     return res
 

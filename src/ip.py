@@ -147,7 +147,6 @@ IP_PROTO_MAX = 255
 
 
 class ip:
-
     def __init__(self, eth):
         """
         初始化函数。
@@ -160,40 +159,32 @@ class ip:
                        "HeaderLength": getFiled(self.__data, 0, 4, 4) * 4,
                        "DSCP": None,
                        "ECN": None,
-                       "TotalLength": None,
+                       "TotalLength": getFiled(self.__data, 2, 0, 16),
                        "Identification": getFiled(self.__data, 4, 0, 16),
                        "Flags": None,
-                       "FragmentOffset": None,
+                       "FragmentOffset": getFiled(self.__data, 6, 3, 13) * 8,
                        "TTL": None,
-                       "Protocol": None,
-                       "Checksum": None,
+                       "Protocol": getFiled(self.__data, 9, 0, 8),
+                       "Checksum": getFiled(self.__data, 10, 0, 8),
                        "SourceIP": self.__data[12:16],
                        "DestinationIP": self.__data[16:20],
                        "Options": None}
-        # self.fields["Identification"] = self.__getFiled(4, 0, 16)
-        #self.fields["SourceIP"] = self.__data[12:16]
-        #self.fields["DestinationIP"] = self.__data[16:20]
-        #self.fields["HeaderLength"] = self.__getFiled(0, 4, 4) * 4
-        self.fields["TotalLength"] = self.__getFiled(2, 0, 16)
-        self.fields["Checksum"] = self.__getFiled(10, 0, 8)
-        self.fields["Protocol"] = self.__getFiled(9, 0, 8)
-        self.fields["FragmentOffset"] = self.__getFiled(6, 3, 13) * 8
 
     def getDst(self):
         s = list()
         for i in range(4):
-            s.append(str(int(self.fields["DestinationIP"][i:i + 1].encode('hex'), 16)))
+            s.append(str(int(base64.b16encode(self.fields["DestinationIP"][i:i + 1]), 16)))
         return ".".join(s)
 
     def getSrc(self):
         s = list()
         for i in range(4):
-            s.append(str(int(self.fields["SourceIP"][i:i + 1].encode('hex'), 16)))
+            s.append(str(int(base64.b16encode(self.fields["SourceIP"][i:i + 1]), 16)))
         return ".".join(s)
 
     def getProtocol(self):
         g = globals()
-        for k, v in g.iteritems():
+        for k, v in list(g.items()):
             if k.startswith('IP_PROTO_') and v == self.fields["Protocol"]:
                 return k
         return 'IP_PROTO_NONE'
@@ -213,27 +204,11 @@ class ip:
     def getOffset(self):
         return self.fields["FragmentOffset"]
 
-    # TODO: this function have been defined in utility.py, I should remove it from this class.
-    def __getFiled(self, byteOffset, bitOffset, length):
-        '''
-        获取header指定的数据域，比如第四个字节的后四位。
-        :param byteOffset: 数据域开始的字节位置
-        :param bitOffset: 数据域开始的位位置
-        :param length: 数据域的长度，按照bit计算
-        :return:int类型，不足一个字节的，在高位补0，然后再转成十进制,按字节计算
-        '''
-        byteLength = (length - (8 - bitOffset)) / 8 + 1
-        data = self.__data[byteOffset:byteOffset + byteLength]
-        mask = 2 ** (byteLength * 8 - bitOffset) - 1
-        data_int = int(data.encode('hex'), 16)
-        res = data_int & mask
-        return res
-
     def checkSum(self):
         check_sum = 0
         i = 0
         while i < self.fields["HeaderLength"]:
-            check_sum += self.__getFiled(i, 0, 16)
+            check_sum += getFiled(self.__data, i, 0, 16)
             i += 2
         check_sum = (check_sum >> 16) + (check_sum & 0xffff)
         return check_sum == 0xffff
@@ -243,7 +218,7 @@ class ip:
         判断ip数据报是否可以分片
         :return:True代表可以分片，False代表不可以分片
         """
-        Flag = byteToInt(self.__data[6])
+        Flag = int(base64.b16encode(self.__data[6:7]), 16)
         return not testBit(Flag, 6)
 
     def moreFragment(self):
@@ -251,7 +226,7 @@ class ip:
         判断ip数据报是不是最后一个分片
         :return:True是最后一个分片，False不是最后一个分片
         """
-        Flag = byteToInt(self.__data[6])
+        Flag = int(base64.b16encode(self.__data[6:7]), 16)
         return testBit(Flag, 5)
 
 
@@ -283,7 +258,7 @@ def reassembleIP(pcap):
             if temp_ip.checkSum() or temp_ip.fields["Checksum"] == 0:  # 判断ip数据报是不是有错误
                 if temp_ip.fragment():
                     temp_ip_id = temp_ip.getID()
-                    if work_list.has_key(temp_ip_id):
+                    if temp_ip_id in work_list:
                         work_list[temp_ip_id].append(temp_ip)
                     else:
                         value = list()
@@ -300,7 +275,7 @@ def reassembleIP(pcap):
         temp_protocol = temp_ip_list[0].getProtocol()
         temp_data = dict()
         hole_descriptor_list = list()
-        hole_descriptor_list.append(dict(first=0, last=1000000))
+        hole_descriptor_list.append(dict(first=0, last=1048576))
         for fragment in temp_ip_list:
             assert isinstance(fragment, ip)
             fragment_first = fragment.getOffset()
@@ -318,7 +293,7 @@ def reassembleIP(pcap):
                         new_hole = dict(first=fragment_last + 1, last=hole_last)
                         hole_descriptor_list.append(new_hole)
         if len(hole_descriptor_list) == 0:
-            data = ''
+            data = b''
             for k in sorted(temp_data.keys()):
                 data = data + temp_data[k]
             res.append(ipDatagram(temp_dst, temp_src, temp_protocol, data))
