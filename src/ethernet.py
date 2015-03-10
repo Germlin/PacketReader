@@ -49,7 +49,7 @@ class ethernet:
         for k, v in list(g.items()):
             if k.startswith('ETH_TYPE_') and v == int(base64.b16encode(self.type), 16):
                 return k
-        return 'ETH_TYPE_NONE'
+        return None
 
     def getData(self):
         return self.__data[14:]

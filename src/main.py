@@ -31,18 +31,18 @@ if __name__ == '__main__':
     print(test)
     print((pcap_file.packetNum()))
 
-    #测试是否能够把每个packet从pcap文件上剥离下来，成功
-    pkt=pcap_file.getPacket()
-    eth = ethernet(pkt[12])
+    # 测试是否能够把每个packet从pcap文件上剥离下来，成功
+    pkt = pcap_file.getPacket()
+    eth = ethernet(pkt[13])
     print((eth.getDst()))
     print((eth.getType()))
 
     # 测试IP
     ipd = ip(eth)
-    print(('-' * 60))
-    print((ipd.getDst()))
-    print((ipd.getSrc()))
-    print((ipd.fields["HeaderLength"]))
+    print('-' * 60)
+    print(ipd.getDst())
+    print(ipd.getSrc())
+    print(ipd.fields["HeaderLength"])
     print((ipd.getProtocol()))
     print((ipd.checkSum()))
     print((len(ipd.getData())))
@@ -62,10 +62,26 @@ if __name__ == '__main__':
     res = reassembleIP(test_pcap_file)
     print(len(res))
     res1 = res[1]
-    print((len(res1.getData())))
+    print(len(res1.data))
 
     print('\n' + '-' * 10 + 'i dont know ' + '-' * 10)
     test_file = open('test_text.txt', 'rb')
     test_data = test_file.readline()
 
     print((getFiled(test_data, 0, 0, 8)))
+
+
+    # test case for TCP
+    print('\n' + '-' * 10 + 'TCP' + '-' * 10)
+    assert isinstance(ipd, ip)
+    ipD = ipDatagram(ipd.getDst(), ipd.getSrc(), ipd.getProtocol(), ipd.getData())
+    tcp = TCP(ipD)
+    print('''
+    src port: {0}
+    dst port: {1}
+    seq : {2}
+    ack : {3}
+    len : {4}
+    '''.format(tcp.fields["Sport"], tcp.fields["Dport"], tcp.fields["Seq"], tcp.fields["Ack"], tcp.getLength()))
+    print("ACK: ", tcp.getACK())
+    print("FIN: ", tcp.getFIN())

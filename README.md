@@ -31,8 +31,8 @@ Discover---input store the pcap file to deal with
 ## ²Î¿¼
 + dpkt
 
-# TODO£º
-+ the follow statment is same, use the first kind.
+## TODO£º
++ the follow statements has same effect, but I think I should use the first method.
   ```
   print(int.from_bytes(data[0:1],byteorder='big',signed=False))
   print(int(base64.b16encode(data[0:1]),16))

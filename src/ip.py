@@ -187,7 +187,7 @@ class ip:
         for k, v in list(g.items()):
             if k.startswith('IP_PROTO_') and v == self.fields["Protocol"]:
                 return k
-        return 'IP_PROTO_NONE'
+        return None
 
     def getData(self):
         return self.__data[self.fields["HeaderLength"]:]
@@ -236,9 +236,6 @@ class ipDatagram:
         self.src = src
         self.protocol = protocol
         self.data = data
-
-    def getData(self):
-        return self.data
 
 
 def reassembleIP(pcap):

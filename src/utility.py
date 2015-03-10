@@ -21,7 +21,6 @@ def testBit(int_data, offset):
 
 def byteToInt(byte_data):
     res = int.from_bytes(byte_data, byteorder='big', signed=False)
-    bd = base64.b16encode(byte_data)
     return res
 
 
@@ -39,7 +38,7 @@ def getFiled(dataIn, byteOffset, bitOffset, length):
     byteLength = (length - (8 - bitOffset)) // 8 + 1
     data = dataIn[byteOffset:(byteOffset + byteLength)]
     mask = 2 ** (byteLength * 8 - bitOffset) - 1
-    data_int = int(base64.b16encode(data), 16)
+    data_int = int.from_bytes(data, byteorder='big', signed=False)  # base64.b16encode(data), 16)
     res = data_int & mask
     return res
 
