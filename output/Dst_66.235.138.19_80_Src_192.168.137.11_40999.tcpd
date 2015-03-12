@@ -1,0 +1,7 @@
+GET /b/ss/twciandroidapp/5/H.15--WAP/4334425580/?events=event2&pageName=/cc&c1=Samsung&c3=09:37&c4=Fri&c6=94087&c9=2.1-update1&c11=ads_y&c35=icon&c39=nl&c40=nl&c14=1&c22=Android2.3.22&c19=Android&c13=SGH-T959 HTTP/1.1
+content-type: text/plain;charset=ISO-8859-1
+accept: text/xml; application/xml; text/plain
+User-Agent: Dalvik/1.1.0 (Linux; U; Android 2.1-update1; SGH-T959 Build/ECLAIR)
+Host: odc.weather.com
+Connection: Keep-Alive
+

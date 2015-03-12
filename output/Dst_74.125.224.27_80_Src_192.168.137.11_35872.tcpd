@@ -1,0 +1,7 @@
+GET /adx/twc.mobapps/android/weather/tfnow;dcmt=text/xml;sz=320x40;country=US;state=CA;zip=94087;dma=807;cnd=cld;device=SGH-T959;ver=Android2.3.22;tmp=50l;tmpr=thaw;mlayer=nl;mpoints=nl;ord=3370672146; HTTP/1.1
+content-type: text/plain;charset=ISO-8859-1
+accept: text/xml; application/xml; text/plain
+User-Agent: Dalvik/1.1.0 (Linux; U; Android 2.1-update1; SGH-T959 Build/ECLAIR)
+Host: ad.doubleclick.net
+Connection: Keep-Alive
+

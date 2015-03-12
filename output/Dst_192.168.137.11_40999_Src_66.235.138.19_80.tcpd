@@ -1,0 +1,17 @@
+HTTP/1.1 302 Found
+Date: Sat, 29 Jan 2011 05:37:58 GMT
+Server: Omniture DC/2.0.0
+Set-Cookie: s_vi=[CS]v1|26A1D3DB05162B00-400001848010E67D[CE]; Expires=Thu, 28 Jan 2016 05:37:58 GMT; Domain=.weather.com; Path=/
+Location: http://odc.weather.com/b/ss/twciandroidapp/5/H.15--WAP/4334425580/?AQB=1&pccr=true&vidn=26A1D3DB05162B00-400001848010E67D&g=none&events=event2&pageName=/cc&c1=Samsung&c3=09:37&c4=Fri&c6=94087&c9=2.1-update1&c11=ads_y&c35=icon&c39=nl&c40=nl&c14=1&c22=Android2.3.22&c19=Android&c13=SGH-T959&AQE=1
+X-C: ms-4.3.1
+Expires: Fri, 28 Jan 2011 05:37:58 GMT
+Last-Modified: Sun, 30 Jan 2011 05:37:58 GMT
+Cache-Control: no-cache, no-store, must-revalidate, max-age=0, proxy-revalidate, no-transform, private
+Pragma: no-cache
+P3P: policyref="/w3c/p3p.xml", CP="NOI DSP COR NID PSA OUR IND COM NAV STA"
+xserver: www436
+Content-Length: 0
+Keep-Alive: timeout=15
+Connection: Keep-Alive
+Content-Type: text/plain
+
