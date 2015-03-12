@@ -88,4 +88,6 @@ if __name__ == '__main__':
     print("dataLength: ", tcp.get_data_length())
     print("SYN: ", tcp.test_syn())
     print("FIN: ", tcp.test_fin())
-    TCP.reassemble_tcp(pcap_file)
+    tcp_list = TCP.reassemble_tcp(pcap_file)
+    for t in tcp_list:
+        t.save(output_path)

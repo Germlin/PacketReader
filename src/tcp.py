@@ -6,8 +6,30 @@ from ip import *
 
 
 class TcpDatagram:
-    def __init__(self, dst_stocket, src_stocket):
-        pass
+    def __init__(self, quadruple, tcp_data):
+        self.dst_socket = quadruple[0:2]
+        self.src_socket = quadruple[2:4]
+        self.data = tcp_data
+
+    def get_data(self):
+        return self.data
+
+    def get_length(self):
+        return len(self.data)
+
+    def get_dst_socket(self):
+        return ':'.join(list(map(str, self.dst_socket)))
+
+    def get_src_socket(self):
+        return ':'.join(list(map(str, self.src_socket)))
+
+    def save(self, path):
+        file_name = 'Dst_' + self.get_dst_socket().replace(':', '_') + \
+                    '_Src_' + self.get_src_socket().replace(':', '_') + '.tcpd'
+        file = open(os.path.join(path, file_name), 'wb')
+        file.write(self.get_data())
+        file.close()
+
 
 class TCP:
     def __init__(self, ip_datagram):
@@ -78,17 +100,12 @@ class TCP:
                     work_list[quadruple].append(pk_tcp)
                 else:
                     work_list[quadruple] = [pk_tcp]
+
+        res = list()
         for k in work_list:
             data = b''
             tcp_segment_list = work_list[k]
             tcp_segment_list.sort(key=lambda x: x.get_seq())
-
-            # delete
-            print(k)
-            for kk in tcp_segment_list:
-                print(kk.get_seq())
-            # end of delete
-
             seg_next = tcp_segment_list[0].get_seq()
             for tcp_segment in tcp_segment_list:
                 assert isinstance(tcp_segment, TCP)
@@ -99,11 +116,6 @@ class TCP:
                     seg_len = tcp_segment.get_data_length()
                     seg_end = seg_begin + seg_len
                     seg_data = tcp_segment.get_data()
-
-                    # delete
-                    print(seg_next, seg_begin)
-                    #end of delete
-
                     if seg_next == seg_begin:
                         data = data + seg_data
                         seg_next = seg_end
@@ -116,4 +128,6 @@ class TCP:
                         raise Exception("Lose packet.")
 
                     if tcp_segment.test_fin():
-                        seg_next = seg_next + 1
+                        seg_next += 1
+            res.append(TcpDatagram(k, data))
+        return res
