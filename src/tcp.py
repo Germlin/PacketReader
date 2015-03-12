@@ -1,12 +1,17 @@
 __author__ = 'Reuynil'
 
+from input import *
 from utility import *
 from ip import *
 
 
+class TcpDatagram:
+    def __init__(self, dst_stocket, src_stocket):
+        pass
+
 class TCP:
-    def __init__(self, ipDatagram):
-        self.__data = ipDatagram.data
+    def __init__(self, ip_datagram):
+        self.__data = ip_datagram.data
         self.fields = collections.OrderedDict()
         self.items = ("SrcPort", "DstPort", "Seq", "Ack", "Length", "Flags", "Win", "Sum", "Urp")
         index = 0
@@ -14,66 +19,101 @@ class TCP:
             self.fields[self.items[index]] = value
             index += 1
 
-    def getSrcPort(self):
+    # TODO:
+    def check_sum(self):
+        pass
+
+    def get_src_port(self):
         return self.fields["SrcPort"]
 
-    def getDstPort(self):
+    def get_dst_port(self):
         return self.fields["DstPort"]
 
-    def getLength(self):
+    def get_length(self):
+        return len(self.__data)
+
+    def get_header_length(self):
         return (self.fields["Length"] >> 4) * 4
 
-    def checkSum(self):
-        pass
+    def get_data_length(self):
+        if self.test_syn():
+            return 0
+        else:
+            return self.get_length() - self.get_header_length()
 
-    def getData(self):
-        pass
+    def get_seq(self):
+        return self.fields["Seq"]
 
-    def getSYN(self):
-        return testBit(self.fields["Flags"], 2)
+    def get_ack(self):
+        return self.fields["Ack"]
 
-    def getACK(self):
+    def get_data(self):
+        if self.test_syn():
+            return b''
+        else:
+            return self.__data[self.get_header_length():]
+
+    def test_syn(self):
+        return testBit(self.fields["Flags"], 1)
+
+    def test_ack(self):
         return testBit(self.fields["Flags"], 4)
 
-    def getFIN(self):
+    def test_fin(self):
         return testBit(self.fields["Flags"], 0)
 
-    class quadruple:
-        pass
-
     @staticmethod
-    def reassembleTCP(pcap):
-        assert isinstance(pcap, pcap)
-        IP_packet = reassembleIP(pcap)
+    def reassemble_tcp(pcap):
+        assert isinstance(pcap, PcapFile)
+        ip_packet = reassembleIP(pcap)
         work_list = dict()
-        for pk in IP_packet:
+        for pk in ip_packet:
             assert isinstance(pk, ipDatagram)
             if pk.protocol == 'IP_PROTO_TCP':
-                pk_dst_ip = pk.dst
-                pk_src_ip = pk.src
+                pk_dst_ip, pk_src_ip = pk.dst, pk.src
                 pk_tcp = TCP(pk)
-                pk_dst_port = pk_tcp.getDstPort()
-                pk_src_port = pk_tcp.getSrcPort()
+                pk_dst_port, pk_src_port = pk_tcp.get_dst_port(), pk_tcp.get_src_port()
                 quadruple = (pk_dst_ip, pk_dst_port, pk_src_ip, pk_src_port)
-                if quadruple in work_list:
-                    work_list[quadruple].append(pk.data)
+                if quadruple in work_list.keys():
+                    work_list[quadruple].append(pk_tcp)
                 else:
-                    work_list[quadruple] = [pk.data]
+                    work_list[quadruple] = [pk_tcp]
         for k in work_list:
+            data = b''
             tcp_segment_list = work_list[k]
+            tcp_segment_list.sort(key=lambda x: x.get_seq())
 
+            # delete
+            print(k)
+            for kk in tcp_segment_list:
+                print(kk.get_seq())
+            # end of delete
 
-class TcpDatagram:
-    def __init__(self):
-        pass
+            seg_next = tcp_segment_list[0].get_seq()
+            for tcp_segment in tcp_segment_list:
+                assert isinstance(tcp_segment, TCP)
+                if tcp_segment.test_syn():
+                    seg_next = tcp_segment.get_seq() + 1
+                else:
+                    seg_begin = tcp_segment.get_seq()
+                    seg_len = tcp_segment.get_data_length()
+                    seg_end = seg_begin + seg_len
+                    seg_data = tcp_segment.get_data()
 
+                    # delete
+                    print(seg_next, seg_begin)
+                    #end of delete
 
-def reassembleTCP(pcap, src, dst):
-    assert isinstance(pcap, pcap)
-    IP_packet = reassembleIP(pcap)
-    temp_packet = list()
-    for pk in IP_packet:
-        assert isinstance(pk, ipDatagram)
-        if pk.protocol == 'IP_PROTO_TCP':
-            temp_packet.append(pk.getData())
+                    if seg_next == seg_begin:
+                        data = data + seg_data
+                        seg_next = seg_end
+                    elif seg_next > seg_begin:
+                        if seg_next < seg_end:
+                            new_data = seg_data[seg_next - seg_begin:]
+                            data = data + new_data
+                            seg_next = seg_end
+                    else:
+                        raise Exception("Lose packet.")
 
+                    if tcp_segment.test_fin():
+                        seg_next = seg_next + 1

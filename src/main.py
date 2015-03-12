@@ -29,13 +29,13 @@ if __name__ == '__main__':
     pcap_file = PcapFile(input_file)
     test = pcap_file.getPcapHeader()
     print(test)
-    print((pcap_file.packetNum()))
+    print(pcap_file.packetNum())
 
     # 测试是否能够把每个packet从pcap文件上剥离下来，成功
     pkt = pcap_file.getPacket()
-    eth = ethernet(pkt[13])
-    print((eth.getDst()))
-    print((eth.getType()))
+    eth = ethernet(pkt[104])
+    print(eth.getDst())
+    print(eth.getType())
 
     # 测试IP
     ipd = ip(eth)
@@ -43,9 +43,9 @@ if __name__ == '__main__':
     print(ipd.getDst())
     print(ipd.getSrc())
     print(ipd.fields["HeaderLength"])
-    print((ipd.getProtocol()))
-    print((ipd.checkSum()))
-    print((len(ipd.getData())))
+    print(ipd.getProtocol())
+    print(ipd.checkSum())
+    print(len(ipd.getData()))
 
     # test cast for the function reassembleIP in ip.py
     print('-' * 10 + ' test for reassembleIP ' + '-' * 10)
@@ -82,6 +82,10 @@ if __name__ == '__main__':
     seq : {2}
     ack : {3}
     len : {4}
-    '''.format(tcp.fields["Sport"], tcp.fields["Dport"], tcp.fields["Seq"], tcp.fields["Ack"], tcp.getLength()))
-    print("ACK: ", tcp.getACK())
-    print("FIN: ", tcp.getFIN())
+    '''.format(tcp.get_src_port(), tcp.get_dst_port(), tcp.get_seq(), tcp.get_ack(), tcp.get_length()))
+    print("ACK: ", tcp.test_ack())
+    print("FIN: ", tcp.test_fin())
+    print("dataLength: ", tcp.get_data_length())
+    print("SYN: ", tcp.test_syn())
+    print("FIN: ", tcp.test_fin())
+    TCP.reassemble_tcp(pcap_file)
