@@ -1,4 +1,4 @@
-# -*- encoding=cp936 -*-
+# -*- encoding=utf-8 -*-
 
 from utility import *
 from input import *
@@ -47,7 +47,7 @@ class ethernet:
     def getType(self):
         g = globals()
         for k, v in list(g.items()):
-            if k.startswith('ETH_TYPE_') and v == int(base64.b16encode(self.type), 16):
+            if k.startswith('ETH_TYPE_') and v == int.from_bytes(self.type, byteorder='big', signed=False):
                 return k
         return None
 

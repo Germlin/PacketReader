@@ -1,4 +1,4 @@
-# -*- encoding=cp936 -*-
+# -*- encoding=utf-8 -*-
 
 __author__ = 'Reuynil'
 
@@ -8,7 +8,7 @@ from ethernet import *
 from ip import *
 from tcp import *
 
-# TODO£º
+# TODOï¼š
 # the follow statment is same, use the first kind.
 # print(int.from_bytes(data[0:1],byteorder='big',signed=False))
 # print(int(base64.b16encode(data[0:1]),16))
@@ -31,21 +31,22 @@ if __name__ == '__main__':
     print(test)
     print(pcap_file.packetNum())
 
-    # ²âÊÔÊÇ·ñÄÜ¹»°ÑÃ¿¸öpacket´ÓpcapÎÄ¼şÉÏ°şÀëÏÂÀ´£¬³É¹¦
+    # æµ‹è¯•æ˜¯å¦èƒ½å¤ŸæŠŠæ¯ä¸ªpacketä»pcapæ–‡ä»¶ä¸Šå‰¥ç¦»ä¸‹æ¥ï¼ŒæˆåŠŸ
     pkt = pcap_file.getPacket()
-    eth = ethernet(pkt[104])
+    eth = ethernet(pkt[8])
     print(eth.getDst())
     print(eth.getType())
 
-    # ²âÊÔIP
+    # æµ‹è¯•IP
     ipd = ip(eth)
     print('-' * 60)
-    print(ipd.getDst())
-    print(ipd.getSrc())
+    print(ipd.get_dst())
+    print(ipd.get_src())
     print(ipd.fields["HeaderLength"])
-    print(ipd.getProtocol())
-    print(ipd.checkSum())
-    print(len(ipd.getData()))
+    print(ipd.get_total_length())
+    print(ipd.get_protocol())
+    print(ipd.test_checksum())
+    print(len(ipd.get_data()))
 
     # test cast for the function reassembleIP in ip.py
     print('-' * 10 + ' test for reassembleIP ' + '-' * 10)
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     # test case for TCP
     print('\n' + '-' * 10 + 'TCP' + '-' * 10)
     assert isinstance(ipd, ip)
-    ipD = ipDatagram(ipd.getDst(), ipd.getSrc(), ipd.getProtocol(), ipd.getData())
+    ipD = ipDatagram(ipd.get_dst(), ipd.get_src(), ipd.get_protocol(), ipd.get_data())
     tcp = TCP(ipD)
     print('''
     src port: {0}

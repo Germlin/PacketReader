@@ -1,4 +1,4 @@
-# -*- encoding=cp936 -*-
+# -*- encoding=utf-8 -*-
 
 __author__ = 'Reuynil'
 
@@ -11,10 +11,10 @@ import base64
 
 def testBit(int_data, offset):
     '''
-    ²âÊÔÄ³Ò»Î»ÊÇ·ñÎª1
-    :param int_data: intÀàĞÍµÄÊı¾İ
-    :param offset: Òª²âÊÔµÄÎ»£¬×î¸ßÎ»Îª7
-    :return:ÊÇ1µÄÊ±ºò·µ»ØTrue
+    æµ‹è¯•æŸä¸€ä½æ˜¯å¦ä¸º1
+    :param int_data: intç±»å‹çš„æ•°æ®
+    :param offset: è¦æµ‹è¯•çš„ä½ï¼Œæœ€é«˜ä½ä¸º7
+    :return:æ˜¯1çš„æ—¶å€™è¿”å›True
     '''
     mask = 0b00000001 << offset
     return bool(int_data & mask)
@@ -26,14 +26,14 @@ def byteToInt(byte_data):
 
 def getFiled(dataIn, byteOffset, bitOffset, length):
     '''
-    »ñÈ¡headerÖ¸¶¨µÄÊı¾İÓò£¬±ÈÈçµÚËÄ¸ö×Ö½ÚµÄºóËÄÎ»¡£
+    è·å–headeræŒ‡å®šçš„æ•°æ®åŸŸï¼Œæ¯”å¦‚ç¬¬å››ä¸ªå­—èŠ‚çš„åå››ä½ã€‚
     Example:
-        If the data is 6128 (two byte in hex)£¬getFiled(data,0,0,8) will return 97(in decimal).
+        If the data is 6128 (two byte in hex)ï¼ŒgetFiled(data,0,0,8) will return 97(in decimal).
         Because the arguments (0,0,8) mean the first byte of the data (61), the value of 61 in hex is 97 in decimal.
     :param byteOffset: the begin position of the field in data. 0 means the filed begins with the first byte.
-    :param bitOffset: Êı¾İÓò¿ªÊ¼µÄÎ»Î»ÖÃ
-    :param length: Êı¾İÓòµÄ³¤¶È£¬°´ÕÕbit¼ÆËã
-    :return:intÀàĞÍ£¬²»×ãÒ»¸ö×Ö½ÚµÄ£¬ÔÚ¸ßÎ»²¹0£¬È»ºóÔÙ×ª³ÉÊ®½øÖÆ,°´×Ö½Ú¼ÆËã
+    :param bitOffset: æ•°æ®åŸŸå¼€å§‹çš„ä½ä½ç½®
+    :param length: æ•°æ®åŸŸçš„é•¿åº¦ï¼ŒæŒ‰ç…§bitè®¡ç®—
+    :return:intç±»å‹ï¼Œä¸è¶³ä¸€ä¸ªå­—èŠ‚çš„ï¼Œåœ¨é«˜ä½è¡¥0ï¼Œç„¶åå†è½¬æˆåè¿›åˆ¶,æŒ‰å­—èŠ‚è®¡ç®—
     '''
     byteLength = (length - (8 - bitOffset)) // 8 + 1
     data = dataIn[byteOffset:(byteOffset + byteLength)]

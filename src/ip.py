@@ -1,8 +1,9 @@
-# -*- encoding=cp936 -*-
+# -*- encoding=utf-8 -*-
 
 __author__ = 'Reuynil'
 
 from utility import *
+from input import *
 from ethernet import *
 
 # Protocol (ip_p) - http://www.iana.org/assignments/protocol-numbers
@@ -148,11 +149,6 @@ IP_PROTO_MAX = 255
 
 class ip:
     def __init__(self, eth):
-        """
-        ³õÊ¼»¯º¯Êý¡£
-        :param eth: type: ethernet(defined in ethernet.py)
-        :return: nothing
-        """
         assert isinstance(eth, ethernet)
         self.__data = eth.getData()
         self.fields = {"version": None,
@@ -170,41 +166,41 @@ class ip:
                        "DestinationIP": self.__data[16:20],
                        "Options": None}
 
-    def getDst(self):
+    def get_dst(self):
         s = list()
         for i in range(4):
             s.append(str(int(base64.b16encode(self.fields["DestinationIP"][i:i + 1]), 16)))
         return ".".join(s)
 
-    def getSrc(self):
+    def get_src(self):
         s = list()
         for i in range(4):
             s.append(str(int(base64.b16encode(self.fields["SourceIP"][i:i + 1]), 16)))
         return ".".join(s)
 
-    def getProtocol(self):
+    def get_protocol(self):
         g = globals()
         for k, v in list(g.items()):
             if k.startswith('IP_PROTO_') and v == self.fields["Protocol"]:
                 return k
         return None
 
-    def getData(self):
-        return self.__data[self.fields["HeaderLength"]:]
+    def get_data(self):
+        return self.__data[self.get_header_length():self.get_total_length()]
 
-    def getID(self):
+    def get_id(self):
         return self.fields["Identification"]
 
-    def getTotalLength(self):
+    def get_total_length(self):
         return self.fields["TotalLength"]
 
-    def getHeaderLength(self):
+    def get_header_length(self):
         return self.fields["HeaderLength"]
 
-    def getOffset(self):
+    def get_offset(self):
         return self.fields["FragmentOffset"]
 
-    def checkSum(self):
+    def test_checksum(self):
         check_sum = 0
         i = 0
         while i < self.fields["HeaderLength"]:
@@ -214,18 +210,10 @@ class ip:
         return check_sum == 0xffff
 
     def fragment(self):
-        """
-        ÅÐ¶ÏipÊý¾Ý±¨ÊÇ·ñ¿ÉÒÔ·ÖÆ¬
-        :return:True´ú±í¿ÉÒÔ·ÖÆ¬£¬False´ú±í²»¿ÉÒÔ·ÖÆ¬
-        """
         Flag = int(base64.b16encode(self.__data[6:7]), 16)
         return not testBit(Flag, 6)
 
     def moreFragment(self):
-        """
-        ÅÐ¶ÏipÊý¾Ý±¨ÊÇ²»ÊÇ×îºóÒ»¸ö·ÖÆ¬
-        :return:TrueÊÇ×îºóÒ»¸ö·ÖÆ¬£¬False²»ÊÇ×îºóÒ»¸ö·ÖÆ¬
-        """
         Flag = int(base64.b16encode(self.__data[6:7]), 16)
         return testBit(Flag, 5)
 
@@ -239,50 +227,46 @@ class ipDatagram:
 
 
 def reassembleIP(pcap):
-    """
-
-    :param pcap:
-    :return:
-    """
     assert isinstance(pcap, PcapFile)
     res = list()
     work_list = dict()
     packet_list = pcap.getPacket()
     for packet in packet_list:
         temp_eth = ethernet(packet)
-        if temp_eth.getType() == 'ETH_TYPE_IP':  # ÅÐ¶ÏÊÇ²»ÊÇipÊý¾Ý±¨
+        if temp_eth.getType() == 'ETH_TYPE_IP':  # åˆ¤æ–­æ˜¯ä¸æ˜¯ipæ•°æ®æŠ¥
             temp_ip = ip(temp_eth)
-            if temp_ip.checkSum() or temp_ip.fields["Checksum"] == 0:  # ÅÐ¶ÏipÊý¾Ý±¨ÊÇ²»ÊÇÓÐ´íÎó
+            if temp_ip.test_checksum() or temp_ip.fields["Checksum"] == 0:  # åˆ¤æ–­ipæ•°æ®æŠ¥æ˜¯ä¸æ˜¯æœ‰é”™è¯¯
                 if temp_ip.fragment():
-                    temp_ip_id = temp_ip.getID()
+                    temp_ip_id = temp_ip.get_id()
                     if temp_ip_id in work_list:
                         work_list[temp_ip_id].append(temp_ip)
                     else:
                         value = list()
                         value.append(temp_ip)
                         work_list[temp_ip_id] = value
-                else:  # ²»ÄÜ·ÖÆ¬
-                    res.append(ipDatagram(temp_ip.getDst(), temp_ip.getSrc(), temp_ip.getProtocol(), temp_ip.getData()))
+                else:  # ä¸èƒ½åˆ†ç‰‡
+                    res.append(
+                        ipDatagram(temp_ip.get_dst(), temp_ip.get_src(), temp_ip.get_protocol(), temp_ip.get_data()))
 
     # The idea of the algorithm is from RFC815
     for key in work_list:
         temp_ip_list = work_list[key]
-        temp_dst = temp_ip_list[0].getDst()
-        temp_src = temp_ip_list[0].getSrc()
-        temp_protocol = temp_ip_list[0].getProtocol()
+        temp_dst = temp_ip_list[0].get_dst()
+        temp_src = temp_ip_list[0].get_src()
+        temp_protocol = temp_ip_list[0].get_protocol()
         temp_data = dict()
         hole_descriptor_list = list()
         hole_descriptor_list.append(dict(first=0, last=1048576))
         for fragment in temp_ip_list:
             assert isinstance(fragment, ip)
-            fragment_first = fragment.getOffset()
-            fragment_last = fragment.getOffset() + (fragment.getTotalLength() - fragment.getHeaderLength())
+            fragment_first = fragment.get_offset()
+            fragment_last = fragment.get_offset() + (fragment.get_total_length() - fragment.get_header_length())
             for hole in hole_descriptor_list:
                 hole_first = hole["first"]
                 hole_last = hole["last"]
                 if fragment_first <= hole_last and fragment_last >= hole_first:
                     hole_descriptor_list.remove(hole)
-                    temp_data[fragment_first] = fragment.getData()
+                    temp_data[fragment_first] = fragment.get_data()
                     if fragment_first > hole_first:
                         new_hole = dict(first=hole_first, last=fragment_first - 1)
                         hole_descriptor_list.append(new_hole)

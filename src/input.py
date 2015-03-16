@@ -1,9 +1,10 @@
-# -*- encoding=cp936 -*-
+# -*- encoding=utf-8 -*-
 
 __author__ = 'Reuynil'
 
 from utility import *
 import base64
+
 
 class PcapHeader:
     '''
@@ -91,7 +92,7 @@ class PcapFile:
 
 class Packet:
     '''
-    Parse each packet to packet_header£¬packet_data and index¡£
+    Parse each packet to packet_headerï¼Œpacket_data and indexã€‚
     '''
 
     def __init__(self, packet_header, packet_data, index):
