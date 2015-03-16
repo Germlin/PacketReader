@@ -4,7 +4,6 @@ __author__ = 'Reuynil'
 
 from utility import *
 
-
 class token:
     def __init__(self, t_data, t_type='B', t_variable=True):
         self.data = t_data
@@ -21,6 +20,7 @@ def tokenization(data):
     :param data:字符串，不经过任何编码。
     :return:一个列表，元素是标记。
     '''
+    assert isinstance(data, bytes)
     token_patten = []
     data_length = len(data)
     k = 0
