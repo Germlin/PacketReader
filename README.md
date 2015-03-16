@@ -1,6 +1,8 @@
 # Discover
 An automatic protocol reverse engineering
 
+[TOC]
+
 ## À´Ô´
 Discover is an automatic protocol reverse engineering. The idea of this tool is from *Discover : an automatic protocol reverse engineering*¡£
 
