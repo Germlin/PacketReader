@@ -7,7 +7,7 @@
  + [代码规则]()
 
 ## 代码
-
+Discover使用Python3.4开发，不需要导入其他第三方模块。
 ### 命名规则
 + ethernet、ip、tcp这些以协议名称命名的类的构造函数传入上一层数据包的**全部**数据，例如：
 
@@ -30,6 +30,12 @@
                       |--tokenize.py
                       |--main.py
                       |--test\_\*
+### 函数功能                    
+#### pcapreader.py
+　　这个模块的功能是对wireshark抓取到的数据包的进行处理，
+1. PcapHeader：
+　　Pcap文件的头，属性只有一个字典，key是域名，value是值。
+2. 
 
 
 ## 算法
