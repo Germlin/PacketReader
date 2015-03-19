@@ -10,9 +10,7 @@
 Discover使用Python3.4开发，不需要导入其他第三方模块。
 ### 命名规则
 + ethernet、ip、tcp这些以协议名称命名的类的构造函数传入上一层数据包的**全部**数据，例如：
-
-> ip(data)中的data是Ethernet层的数据包的全部内容，包括Ethernet的报文头，所以```__init__()```的第一步往往是```data.getData()```
-
+ ip(data)中的data是Ethernet层的数据包的全部内容，包括Ethernet的报文头。
 + 类名首字母大写，函数名第一个单词首字母小写，后面的单词首字母大写，参数全部小写（用下划线连接）
 + 类ip指的是wireshark捕获的一个ip数据包，而ipDatagram指的是重组后的ip数据报
 
@@ -37,14 +35,18 @@ Discover使用Python3.4开发，不需要导入其他第三方模块。
 　　这个模块的功能是对wireshark抓取到的数据包的进行处理，一个pcap文件包括一个pcap头和若干个packet，每一个packet包括packet的头和数据。
 
 1. PcapHeader：
+
  Pcap文件的头，成员变量是一个字典，key是字段的名称，value是字段的值。
+
 2. PacketHeader：
+
  Packet的头，成员变量是一个字典，key是字段的名称，value是字段的值。
+ 
  + getPacketLength()返回packet的长度。
 
 
 ## 算法
-Discover 的算法思想来源于论文：*Discover : an automatic protocol reverse engineering*。
+Discover 的算法思想来源于论文——*Discover : an automatic protocol reverse engineering*。
 ### 例子
 |输入数据   |类型     |模块     |函数     |输出数据   |类型     |
 |----------|------------|----------|----------|----------|----------|
