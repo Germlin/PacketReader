@@ -30,11 +30,16 @@ Discover使用Python3.4开发，不需要导入其他第三方模块。
                       |--tokenize.py
                       |--main.py
                       |--test\_\*
-### 函数功能                    
+### 函数功能
+
 #### pcapreader.py
-　　这个模块的功能是对wireshark抓取到的数据包的进行处理，
+
+　　这个模块的功能是对wireshark抓取到的数据包的进行处理。
+
 1. PcapHeader：
-　　Pcap文件的头，属性只有一个字典，key是域名，value是值。
+
+ Pcap文件的头，属性只有一个字典，key是域名，value是值。
+
 2. 
 
 
