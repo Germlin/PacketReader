@@ -34,13 +34,17 @@ Discover使用Python3.4开发，不需要导入其他第三方模块。
 
 #### pcapreader.py
 
-　　这个模块的功能是对wireshark抓取到的数据包的进行处理。
+　　这个模块的功能是对wireshark抓取到的数据包的进行处理，一个pcap文件包括一个pcap头和若干个packet，每一个packet包括packet的头和数据。
 
 1. PcapHeader：
 
- Pcap文件的头，属性只有一个字典，key是域名，value是值。
+ Pcap文件的头，成员变量是一个字典，key是字段的名称，value是字段的值。
 
-2. 
+2. PacketHeader：
+
+ Packet的头，成员变量是一个字典，key是字段的名称，value是字段的值。
+ 
+ + getPacketLength()返回packet的长度。
 
 
 ## 算法
