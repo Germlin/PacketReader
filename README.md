@@ -3,13 +3,12 @@
 
 ## 目录
 + [Discover](https://github.com/Reuynil/Discover#discover)
- + [来源](https://github.com/Reuynil/Discover#%E6%9D%A5%E6%BA%90)
+ + [代码](https://github.com/Reuynil/Discover#%E6%9D%A5%E6%BA%90)
  + [代码规则]()
 
-## 来源
-Discover is an automatic protocol reverse engineering. The idea of this tool is from *Discover : an automatic protocol reverse engineering*。
+## 代码
 
-## 代码规则
+### 命名规则
 + ethernet、ip、tcp这些以协议名称命名的类的构造函数传入上一层数据包的**全部**数据，例如：
 
 > ip(data)中的data是Ethernet层的数据包的全部内容，包括Ethernet的报文头，所以```__init__()```的第一步往往是```data.getData()```
@@ -17,7 +16,7 @@ Discover is an automatic protocol reverse engineering. The idea of this tool is 
 + 类名首字母大写，函数名第一个单词首字母小写，后面的单词首字母大写，参数全部小写（用下划线连接）
 + 类ip指的是wireshark捕获的一个ip数据包，而ipDatagram指的是重组后的ip数据报
 
-## 代码结构
+### 代码结构
 
         Discover---input store the pcap file to deal with
                 |
@@ -32,6 +31,14 @@ Discover is an automatic protocol reverse engineering. The idea of this tool is 
                       |--main.py
                       |--test\_\*
 
+
+## 算法
+Discover 的算法思想来源于论文：*Discover : an automatic protocol reverse engineering*。
+### 例子
+|输入数据   |类型     |模块     |函数     |输出数据   |类型     |
+|----------|------------|----------|----------|----------|----------|
+|pcapFile  |pcap格式文件   |tcp.py      |reassemble_tcp     |tcp_datagram_list  |list(tcpDatagram)   |
+|t_d_l     |list(tcpDatagram)   |tokenize.py    |tokenize_tcp   |tcp_message_list   |list(message)  |
 
 ## 参考
 + dpkt
