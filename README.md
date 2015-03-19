@@ -1,20 +1,22 @@
 # Discover
-An automatic protocol reverse engineering
+ä¸€ä¸ªè‡ªåŠ¨åŒ–çš„åè®®é€†å‘åˆ†æå¼•æ“
 
-[TOC]
++ [Discover](https://github.com/Reuynil/Discover#discover)
+ + [æ¥æº](https://github.com/Reuynil/Discover#%E6%9D%A5%E6%BA%90)
+ + [ä»£ç è§„åˆ™]()
 
-## À´Ô´
-Discover is an automatic protocol reverse engineering. The idea of this tool is from *Discover : an automatic protocol reverse engineering*¡£
+## æ¥æº
+Discover is an automatic protocol reverse engineering. The idea of this tool is from *Discover : an automatic protocol reverse engineering*ã€‚
 
-## ´úÂë¹æÔò
-+ ethernet¡¢ip¡¢tcpÕâĞ©ÒÔĞ­ÒéÃû³ÆÃüÃûµÄÀàµÄ¹¹Ôìº¯Êı´«ÈëÉÏÒ»²ãÊı¾İ°üµÄ**È«²¿**Êı¾İ£¬ÀıÈç£º
+## ä»£ç è§„åˆ™
++ ethernetã€ipã€tcpè¿™äº›ä»¥åè®®åç§°å‘½åçš„ç±»çš„æ„é€ å‡½æ•°ä¼ å…¥ä¸Šä¸€å±‚æ•°æ®åŒ…çš„**å…¨éƒ¨**æ•°æ®ï¼Œä¾‹å¦‚ï¼š
 
-> ip(data)ÖĞµÄdataÊÇEthernet²ãµÄÊı¾İ°üµÄÈ«²¿ÄÚÈİ£¬°üÀ¨EthernetµÄ±¨ÎÄÍ·£¬ËùÒÔ```__init__()```µÄµÚÒ»²½ÍùÍùÊÇ```data.getData()```
+> ip(data)ä¸­çš„dataæ˜¯Ethernetå±‚çš„æ•°æ®åŒ…çš„å…¨éƒ¨å†…å®¹ï¼ŒåŒ…æ‹¬Ethernetçš„æŠ¥æ–‡å¤´ï¼Œæ‰€ä»¥```__init__()```çš„ç¬¬ä¸€æ­¥å¾€å¾€æ˜¯```data.getData()```
 
-+ ÀàÃûÊ××ÖÄ¸´óĞ´£¬º¯ÊıÃûµÚÒ»¸öµ¥´ÊÊ××ÖÄ¸Ğ¡Ğ´£¬ºóÃæµÄµ¥´ÊÊ××ÖÄ¸´óĞ´£¬²ÎÊıÈ«²¿Ğ¡Ğ´£¨ÓÃÏÂ»®ÏßÁ¬½Ó£©
-+ ÀàipÖ¸µÄÊÇwireshark²¶»ñµÄÒ»¸öipÊı¾İ°ü£¬¶øipDatagramÖ¸µÄÊÇÖØ×éºóµÄipÊı¾İ±¨
++ ç±»åé¦–å­—æ¯å¤§å†™ï¼Œå‡½æ•°åç¬¬ä¸€ä¸ªå•è¯é¦–å­—æ¯å°å†™ï¼Œåé¢çš„å•è¯é¦–å­—æ¯å¤§å†™ï¼Œå‚æ•°å…¨éƒ¨å°å†™ï¼ˆç”¨ä¸‹åˆ’çº¿è¿æ¥ï¼‰
++ ç±»ipæŒ‡çš„æ˜¯wiresharkæ•è·çš„ä¸€ä¸ªipæ•°æ®åŒ…ï¼Œè€ŒipDatagramæŒ‡çš„æ˜¯é‡ç»„åçš„ipæ•°æ®æŠ¥
 
-## ´úÂë½á¹¹
+## ä»£ç ç»“æ„
 
         Discover---input store the pcap file to deal with
                 |
@@ -30,10 +32,10 @@ Discover is an automatic protocol reverse engineering. The idea of this tool is 
                       |--test\_\*
 
 
-## ²Î¿¼
+## å‚è€ƒ
 + dpkt
 
-## TODO£º
+## TODOï¼š
 + the follow statements has same effect, but I think I should use the first method.
   ```
   print(int.from_bytes(data[0:1],byteorder='big',signed=False))
