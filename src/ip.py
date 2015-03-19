@@ -3,7 +3,7 @@
 __author__ = 'Reuynil'
 
 from utility import *
-from input import *
+from pcapreader import *
 from ethernet import *
 
 # Protocol (ip_p) - http://www.iana.org/assignments/protocol-numbers
@@ -152,16 +152,16 @@ class ip:
         assert isinstance(eth, ethernet)
         self.__data = eth.getData()
         self.fields = {"version": None,
-                       "HeaderLength": getFiled(self.__data, 0, 4, 4) * 4,
+                       "HeaderLength": get_filed(self.__data, 0, 4, 4) * 4,
                        "DSCP": None,
                        "ECN": None,
-                       "TotalLength": getFiled(self.__data, 2, 0, 16),
-                       "Identification": getFiled(self.__data, 4, 0, 16),
+                       "TotalLength": get_filed(self.__data, 2, 0, 16),
+                       "Identification": get_filed(self.__data, 4, 0, 16),
                        "Flags": None,
-                       "FragmentOffset": getFiled(self.__data, 6, 3, 13) * 8,
+                       "FragmentOffset": get_filed(self.__data, 6, 3, 13) * 8,
                        "TTL": None,
-                       "Protocol": getFiled(self.__data, 9, 0, 8),
-                       "Checksum": getFiled(self.__data, 10, 0, 8),
+                       "Protocol": get_filed(self.__data, 9, 0, 8),
+                       "Checksum": get_filed(self.__data, 10, 0, 8),
                        "SourceIP": self.__data[12:16],
                        "DestinationIP": self.__data[16:20],
                        "Options": None}
@@ -204,18 +204,18 @@ class ip:
         check_sum = 0
         i = 0
         while i < self.fields["HeaderLength"]:
-            check_sum += getFiled(self.__data, i, 0, 16)
+            check_sum += get_filed(self.__data, i, 0, 16)
             i += 2
         check_sum = (check_sum >> 16) + (check_sum & 0xffff)
         return check_sum == 0xffff
 
     def fragment(self):
         Flag = int(base64.b16encode(self.__data[6:7]), 16)
-        return not testBit(Flag, 6)
+        return not test_bit(Flag, 6)
 
     def moreFragment(self):
         Flag = int(base64.b16encode(self.__data[6:7]), 16)
-        return testBit(Flag, 5)
+        return test_bit(Flag, 5)
 
 
 class ipDatagram:

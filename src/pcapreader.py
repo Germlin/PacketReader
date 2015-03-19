@@ -3,14 +3,8 @@
 __author__ = 'Reuynil'
 
 from utility import *
-import base64
-
 
 class PcapHeader:
-    '''
-    This is the header of Pcap file.
-    '''
-
     def __init__(self, pcapFile):
         self.field = collections.OrderedDict()
         pcapFile.seek(0, 0)
@@ -30,10 +24,6 @@ class PcapHeader:
 
 
 class PacketHeader:
-    '''
-    This is the header of Packet
-    '''
-
     def __init__(self, pcapFile, whence):
         self.field = collections.OrderedDict()
         self.fieldItem = ['TimestampSec', 'TimestampMSe', 'Caplen', 'Length']
@@ -59,8 +49,7 @@ class PcapFile:
         self.__pcapLength = int(os.path.getsize(fileName))
         self.__pcapFile = open(fileName, 'rb')
         self.__pcapHeader = PcapHeader(self.__pcapFile)
-        self.__packet = list()
-        self.__getPacket()
+        self.__packet = self._getPacket()
 
     def __len__(self):
         return self.__pcapLength
@@ -71,7 +60,8 @@ class PcapFile:
     def __del__(self):
         self.__pcapFile.close()
 
-    def __getPacket(self):
+    def _getPacket(self):
+        res = list()
         whence = 24
         index = 0
         while whence < self.__pcapLength:
@@ -79,9 +69,10 @@ class PcapFile:
             dataLength = header.getPacketLength()
             data = self.__pcapFile.read(dataLength)
             packet = Packet(header, data, index)
-            self.__packet.append(packet)
+            res.append(packet)
             whence = whence + dataLength + 16
             index = index + 1
+        return res
 
     def packetNum(self):
         return len(self.__packet)
@@ -91,10 +82,6 @@ class PcapFile:
 
 
 class Packet:
-    '''
-    Parse each packet to packet_header，packet_data and index。
-    '''
-
     def __init__(self, packet_header, packet_data, index):
         self.__packetHeader = packet_header
         self.__packetData = packet_data

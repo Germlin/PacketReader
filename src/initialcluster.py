@@ -2,8 +2,9 @@
 
 __author__ = 'Reuynil'
 
-from tokenize import token
+from message import *
 
 
-def initialCluster(data_set):
-    pass
+def initial_cluster(message_set):
+    res = dict()
+    return res

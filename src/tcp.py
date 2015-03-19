@@ -2,7 +2,7 @@
 
 __author__ = 'Reuynil'
 
-from input import *
+from pcapreader import *
 from utility import *
 from ip import *
 
@@ -78,13 +78,13 @@ class TCP:
             return self.__data[self.get_header_length():]
 
     def test_syn(self):
-        return testBit(self.fields["Flags"], 1)
+        return test_bit(self.fields["Flags"], 1)
 
     def test_ack(self):
-        return testBit(self.fields["Flags"], 4)
+        return test_bit(self.fields["Flags"], 4)
 
     def test_fin(self):
-        return testBit(self.fields["Flags"], 0)
+        return test_bit(self.fields["Flags"], 0)
 
     @staticmethod
     def reassemble_tcp(pcap):

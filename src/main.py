@@ -3,7 +3,7 @@
 __author__ = 'Reuynil'
 
 from utility import *
-from input import *
+from pcapreader import *
 from ethernet import *
 from ip import *
 from tcp import *
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     test_file = open('test_text.txt', 'rb')
     test_data = test_file.readline()
 
-    print((getFiled(test_data, 0, 0, 8)))
+    print((get_filed(test_data, 0, 0, 8)))
 
 
     # test case for TCP

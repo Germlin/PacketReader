@@ -9,7 +9,8 @@ import struct
 import sys
 import base64
 
-def testBit(int_data, offset):
+
+def test_bit(int_data, offset):
     '''
     测试某一位是否为1
     :param int_data: int类型的数据
@@ -19,15 +20,17 @@ def testBit(int_data, offset):
     mask = 0b00000001 << offset
     return bool(int_data & mask)
 
-def byteToInt(byte_data):
+
+def byte_to_int(byte_data):
     res = int.from_bytes(byte_data, byteorder='big', signed=False)
     return res
 
-def getFiled(dataIn, byteOffset, bitOffset, length):
+
+def get_filed(dataIn, byteOffset, bitOffset, length):
     '''
     获取header指定的数据域，比如第四个字节的后四位。
     Example:
-        If the data is 6128 (two byte in hex)，getFiled(data,0,0,8) will return 97(in decimal).
+        If the data is 6128 (two byte in hex)，get_filed(data,0,0,8) will return 97(in decimal).
         Because the arguments (0,0,8) mean the first byte of the data (61), the value of 61 in hex is 97 in decimal.
     :param byteOffset: the begin position of the field in data. 0 means the filed begins with the first byte.
     :param bitOffset: 数据域开始的位位置

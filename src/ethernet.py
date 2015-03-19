@@ -1,7 +1,7 @@
 # -*- encoding=utf-8 -*-
 
 from utility import *
-from input import *
+from pcapreader import *
 import base64
 
 __author__ = 'Reuynil'
