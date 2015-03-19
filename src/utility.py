@@ -23,7 +23,6 @@ def byteToInt(byte_data):
     res = int.from_bytes(byte_data, byteorder='big', signed=False)
     return res
 
-
 def getFiled(dataIn, byteOffset, bitOffset, length):
     '''
     获取header指定的数据域，比如第四个字节的后四位。
@@ -42,6 +41,3 @@ def getFiled(dataIn, byteOffset, bitOffset, length):
     res = data_int & mask
     return res
 
-
-def followTCPstream(ip):
-    pass
