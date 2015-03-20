@@ -43,16 +43,23 @@ Discover使用Python3.4开发，不需要导入其他第三方模块。
 #### tokenize.py
 1. `token`用来描述**一个**数据的记号，包括记号的类型（type，二进制：‘B’，文本：‘T’），属性（variable，`Ture`为可变），同时带有数据。
  + 如果两个`token`的类型和属性相同时，认为两个记号相等。
-  
-2. `tokenPattern`用来描述**一段**数据的记号模式，它的成员是一个`list`，`list`的元素也是`list`类型，包括两个（以后可以增加）`str`类型的元素，一个代表记号的类型，一个代表记号的属性。
+
+2. `tokenPattern`用来描述**一段**数据（或者称之为“消息”）的记号模式，它的成员是一个`list`，`list`的元素也是`list`类型，包括两个（以后可以增加）`str`类型的元素，一个代表记号的类型，一个代表记号的属性。
  + 如果两个`tokenPattern`的`list`每个元素都一样，认为两个记号模式相等。
+ + `tokenPattern`的构造函数需要传入一个类型为`message`的参数。
  + `tokenPattern`主要用来作为`message_set`的key。
-  
+
 3. `tokenize_by_byte(data)`对一段`bytes`类型的数据逐字节地尝试按照utf-8的编码方式进行解码，如果不能解码，标记为二进制数据，否则标记为文本。
- + 注意，这个函数中，一段有4个字的数据会被标记成**4**个类型为‘B’的```token```，而不是1个。
-  
+ + 返回值：一个由`token`构成的`list`。
+ + 注意，这个函数中，一段有4个字的数据会被标记成**4**个类型为‘T’的```token```，而不是**1**个。
+
 4. `tokenization(data,text_threshold)`对一段`bytes`类型的数据进行标记，`text_threshold`代表文本类型的数据的最小长度，默认为3。
+ + 返回值：一个由`token`构成的`list`。
+ + 注意，这个函数中，一段有4个字的数据会被标记成**1**个类型为‘T’的```token```，而不是**4**个。
+
+5. `tokenize_tcp(tcp_datagram)`对已一个类型为`tcpDatagram`的数据进行标记，它的返回值是用于初始分类的`message`类型。该类型包含以下成员：
  + 消息的方向。
+ + 消息的记号模式。
 
 #### initialcluster.py
 
