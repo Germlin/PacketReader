@@ -2,7 +2,7 @@
 一个自动化的协议逆向分析引擎
 
 ## 目录
-+ [Discover](https://github.com/Reuynil/Discover#discover)
++ [Discover](#Discover)
  + [代码](https://github.com/Reuynil/Discover#%E6%9D%A5%E6%BA%90)
    + [命名规则]()
    + [代码结构]()
@@ -10,7 +10,7 @@
      + [pcapreader.py]()
  + [算法]()
    + [例子]()
- + [TODO]()
+ + [TODO](## TODO)
 
 ## 代码
 Discover使用Python3.4开发，不需要导入其他第三方模块。
