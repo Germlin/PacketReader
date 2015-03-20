@@ -2,15 +2,16 @@
 一个自动化的协议逆向分析引擎
 
 ## 目录
-+ [Discover](#Discover)
- + [代码](https://github.com/Reuynil/Discover#%E6%9D%A5%E6%BA%90)
-   + [命名规则]()
-   + [代码结构]()
-   + [函数功能]()
++ [Discover](https://github.com/Reuynil/Discover#discover)
+ + [代码](https://github.com/Reuynil/Discover#%E4%BB%A3%E7%A0%81)
+   + [命名规则](https://github.com/Reuynil/Discover#%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99)
+   + [代码结构](https://github.com/Reuynil/Discover#%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84)
+   + [函数功能](https://github.com/Reuynil/Discover#%E5%87%BD%E6%95%B0%E5%8A%9F%E8%83%BD)
      + [pcapreader.py]()
- + [算法]()
-   + [例子]()
- + [TODO](## TODO)
+     + [tokenize.py](https://github.com/Reuynil/Discover#tokenizepy)
+ + [算法](https://github.com/Reuynil/Discover#%E7%AE%97%E6%B3%95)
+   + [例子](https://github.com/Reuynil/Discover#%E4%BE%8B%E5%AD%90)
+ + [TODO](https://github.com/Reuynil/Discover#todo)
 
 ## 代码
 Discover使用Python3.4开发，不需要导入其他第三方模块。
