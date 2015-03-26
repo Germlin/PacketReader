@@ -8,21 +8,11 @@ from ethernet import *
 from ip import *
 from tcp import *
 
-# TODO：
-# the follow statment is same, use the first kind.
-# print(int.from_bytes(data[0:1],byteorder='big',signed=False))
-# print(int(base64.b16encode(data[0:1]),16))
-
-
-
 
 if __name__ == '__main__':
     file_name = "weather_channel_android_app.pcap"
     # do not edit.
-    src_path = sys.path[0]
-    program_path = os.path.abspath(os.path.join(src_path, os.pardir))
-    input_path = os.path.join(program_path, 'input')
-    output_path = os.path.join(program_path, 'output')
+    src_path, input_path, output_path = get_path()
     # if you want to change the pcap file, you just need to change the file_name.
     input_file = os.path.join(input_path, file_name)
 
@@ -49,6 +39,7 @@ if __name__ == '__main__':
     print(len(ipd.get_data()))
 
     # test cast for the function reassembleIP in ip.py
+    """
     print('-' * 10 + ' test for reassembleIP ' + '-' * 10)
     test_file_name = "test_ping_ip_reassemble.pcap"
     test_input_file = os.path.join(input_path, test_file_name)
@@ -92,3 +83,19 @@ if __name__ == '__main__':
     tcp_list = TCP.reassemble_tcp(pcap_file)
     for t in tcp_list:
         t.save(output_path)
+
+    """
+    # test for douban moment
+    """
+    print('/'*100)
+    file_name="20150325_douban.pcap"
+    input_file = os.path.join(input_path, file_name)
+    pcap_file = PcapFile(input_file)
+    res = TCP.reassemble_tcp(pcap_file)
+    data_path=os.path.join(output_path,file_name)
+    os.makedirs(data_path,exist_ok=True)
+    for t in res:
+        t.save(data_path)
+    """
+
+    #

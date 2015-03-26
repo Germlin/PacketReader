@@ -44,3 +44,10 @@ def get_filed(dataIn, byteOffset, bitOffset, length):
     res = data_int & mask
     return res
 
+
+def get_path():
+    src_path = sys.path[0]
+    program_path = os.path.abspath(os.path.join(src_path, os.pardir))
+    input_path = os.path.join(program_path, 'input')
+    output_path = os.path.join(program_path, 'output')
+    return (src_path, input_path, output_path)
