@@ -1,6 +1,0 @@
-GET /rest/api3.do?ttid=android%40umeng&t=1427292308&deviceId=AiW4zMeOAgNSTlVpSD_vT8PvH32GC79jKSVOIn1RDPSj&imei=umeng&appKey=umeng%3A51f74e9356240b8f7f09d85c&v=6.0&sign=9ee9dfc48b808dae64091a4a2cb41c4d&data=%7B%22vote_factors%22%3A%22%7B%5C%22com.douban.daily%5C%22%3A20131220%7D%22%7D&api=mtop.push.channel.vote&imsi=umeng HTTP/1.1
-Host: utop.umengcloud.com
-Connection: Keep-Alive
-User-Agent: Agoo-sdk-2.0
-Accept-Encoding: gzip
-

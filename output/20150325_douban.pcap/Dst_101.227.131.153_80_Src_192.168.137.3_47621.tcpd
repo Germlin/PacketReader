@@ -1,10 +1,0 @@
-POST /configsvr/serverlist.jsp?mType=getssolist HTTP/1.1
-User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.4; MI 3 MIUI/5.3.20)
-Host: configsvr.msf.3g.qq.com
-Connection: Keep-Alive
-Accept-Encoding: gzip
-Content-Type: application/x-www-form-urlencoded
-Content-Length: 136
-
-/Ç ‡¥ãĞ®çW48øÚ6_kU(3er~°6@qÌÅÍ­›K¡³ş›?Â&µ.ËxØğw)ÅK"K5DîùA~šé0†t)åi8l¹¨«’À¾3„Ï™·ã“™f’eİ
-§bıÙªÈÒÓ`Ä@J‚è“wË²¯ƒÿ¦†“	°“÷
