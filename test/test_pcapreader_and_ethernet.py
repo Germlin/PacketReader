@@ -15,9 +15,12 @@ if __name__ == "__main__":
     output_path = os.path.join(program_path, 'output')
     input_file = os.path.join(input_path, file_name)
 
-    pcap_file=ProtocolReverse.pcapreader.PcapFile(input_file)
-    pcap_file_header=pcap_file.get_pcap_header()
+    pcap_file = ProtocolReverse.pcapreader.PcapFile(input_file)
+    pcap_file_header = pcap_file.get_pcap_header()
     print(pcap_file_header)
 
-    packet_list=pcap_file.get_packet()
+    packet_list = pcap_file.get_packet()
     print(len(packet_list))
+
+    eth = ProtocolReverse.ethernet.Ethernet(packet_list[0])
+    print(eth.get_dst(), eth.get_src(), eth.get_type())
