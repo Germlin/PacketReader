@@ -17,3 +17,4 @@ if __name__ == '__main__':
     pcap_file = ProtocolReverse.pcapreader.PcapFile(input_file)
     ip_list = ProtocolReverse.ip.IP.reassemble_ip(pcap_file)
     print(len(ip_list))
+    print(ip_list[0].dst)

@@ -1,10 +1,13 @@
 # -*- encoding=utf-8 -*-
 
-__author__ = 'Reuynil'
+__author__ = 'linyue'
 
-from pcapreader import *
-from utility import *
-from ip import *
+import pcapreader
+import utility
+import ip
+import os
+import collections
+import struct
 
 
 class TcpDatagram:
@@ -35,7 +38,10 @@ class TcpDatagram:
 
 class TCP:
     def __init__(self, ip_datagram):
+        assert isinstance(ip_datagram, ip.IpDatagram)
         self.__data = ip_datagram.data
+        self.__src = ip_datagram.src
+        self.__dst = ip_datagram.dst
         self.fields = collections.OrderedDict()
         self.items = ("SrcPort", "DstPort", "Seq", "Ack", "Length", "Flags", "Win", "Sum", "Urp")
         index = 0
@@ -43,9 +49,17 @@ class TCP:
             self.fields[self.items[index]] = value
             index += 1
 
-    # TODO:
+    # TODO: 没有完成。
     def check_sum(self):
-        pass
+        source_ip = b''
+        for i in self.__src.split('.'):
+            source_ip += int(i).to_bytes(1, byteorder='big')
+        destination_ip = b''
+        for i in self.__dst.split('.'):
+            destination_ip += int(i).to_bytes(1, byteorder='big')
+        reserved = 0
+        protocol = ip.IP_PROTO_TCP
+
 
     def get_src_port(self):
         return self.fields["SrcPort"]
@@ -78,21 +92,21 @@ class TCP:
             return self.__data[self.get_header_length():]
 
     def test_syn(self):
-        return test_bit(self.fields["Flags"], 1)
+        return utility.test_bit(self.fields["Flags"], 1)
 
     def test_ack(self):
-        return test_bit(self.fields["Flags"], 4)
+        return utility.test_bit(self.fields["Flags"], 4)
 
     def test_fin(self):
-        return test_bit(self.fields["Flags"], 0)
+        return utility.test_bit(self.fields["Flags"], 0)
 
     @staticmethod
     def reassemble_tcp(pcap):
-        assert isinstance(pcap, PcapFile)
-        ip_packet = reassembleIP(pcap)
+        assert isinstance(pcap, pcapreader.PcapFile)
+        ip_packet = ip.IP.reassemble_ip(pcap)
         work_list = dict()
         for pk in ip_packet:
-            assert isinstance(pk, ipDatagram)
+            assert isinstance(pk, ip.IpDatagram)
             if pk.protocol == 'IP_PROTO_TCP':
                 pk_dst_ip, pk_src_ip = pk.dst, pk.src
                 pk_tcp = TCP(pk)
