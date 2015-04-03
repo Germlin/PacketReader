@@ -1,6 +1,6 @@
 # -*- encoding=utf-8 -*-
 
-__author__ = 'Reuynil'
+__author__ = 'linyue'
 
 import os
 import collections
