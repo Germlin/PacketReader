@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 25 Mar 2015 14:05:08 GMT
+Content-Type: application/json;charset=UTF-8
+Content-Length: 201
+Connection: keep-alive
+Mres-length: 201
+m-retcode: SUCCESS
+x-paramkey: mtop.push.channel.vote
+s-rt: 4
+
+{"api":"mtop.push.channel.vote","v":"6.0","ret":["SUCCESS::调用成功"],"data":{"vote_list":[{"package_name":"com.douban.daily","package_name_list":["com.douban.daily"]}],"time_out":"1427377197619"}}

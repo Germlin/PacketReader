@@ -1,0 +1,6 @@
+GET /rest/api3.do?ttid=android%40umeng&t=1427292297&imei=umeng&appKey=umeng%3A534f7d2a56240bc9d2027380&v=4.0&sign=70d74c116d9bb9fdb0f66b46c327b48b&data=%7B%22new_device%22%3A%22true%22%2C%22c1%22%3A%22MI+3%22%2C%22c2%22%3A%22umeng%22%2C%22device_global_id%22%3A%22VKbSRqCObEUDAKjMGtAAzvf6%22%2C%22c0%22%3A%22Xiaomi%22%2C%22c6%22%3A%22be79eb56df8b2e52%22%2C%22package_name%22%3A%22com.douban.daily%22%2C%22c5%22%3A%228c9fc99c%22%2C%22app_version%22%3A%221.5.2%22%2C%22sdk_version%22%3A20131220%2C%22c4%22%3A%2268%3Adf%3Add%3Aa4%3A32%3Aa1%22%2C%22c3%22%3A%22umeng%22%7D&api=mtop.push.device.createAndRegister&imsi=umeng HTTP/1.1
+Host: utop.umengcloud.com
+Connection: Keep-Alive
+User-Agent: Agoo-sdk-2.0
+Accept-Encoding: gzip
+

@@ -1,0 +1,8 @@
+GET /rest/api3.do?ttid=android%40umeng&t=1427292312&deviceId=AiW4zMeOAgNSTlVpSD_vT8MrgHEixqZtr0QkYoOGlD9E&imei=umeng&appKey=umeng%3A534f7d2a56240bc9d2027380&v=6.0&sign=73f60ff2fb1337cb71ec787f3fa11824&data=%7B%22c1%22%3A%22MI+3%22%2C%22c2%22%3A%22umeng%22%2C%22agooSdkVersion%22%3A20131220%2C%22vote%22%3A%22remote%22%2C%22c0%22%3A%22Xiaomi%22%2C%22c6%22%3A%22be79eb56df8b2e52%22%2C%22c5%22%3A%228c9fc99c%22%2C%22c4%22%3A%2268%3Adf%3Add%3Aa4%3A32%3Aa1%22%2C%22c3%22%3A%22umeng%22%2C%22appPackage%22%3A%22com.douban.daily%22%2C%22deviceId%22%3A%22AiW4zMeOAgNSTlVpSD_vT8MrgHEixqZtr0QkYoOGlD9E%22%7D&api=mtop.push.msg.new&imsi=umeng&nt=wifi&lac=42267&cid=43001887 HTTP/1.1
+User-agent: Agoo-sdk-2.0
+X-COMMAND: vote=remote
+Hb: 300
+Host: 140.205.203.110:8009
+Connection: Keep-Alive
+Accept-Encoding: gzip
+

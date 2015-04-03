@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 25 Mar 2015 14:05:52 GMT
+Content-Type: application/json;charset=UTF-8
+Content-Length: 95
+Connection: keep-alive
+Mres-length: 95
+m-retcode: SUCCESS
+x-paramkey: mtop.push.device.unregister
+s-rt: 5
+
+{"api":"mtop.push.device.unregister","v":"4.0","ret":["SUCCESS::接口调用成功"],"data":{}}

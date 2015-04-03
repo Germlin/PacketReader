@@ -1,7 +1,0 @@
-GET /weather/local/94087?dayf=11&eloc=true&dayd=2&cc=* HTTP/1.1
-content-type: text/plain;charset=ISO-8859-1
-accept: text/xml; application/xml; text/plain
-User-Agent: Dalvik/1.1.0 (Linux; U; Android 2.1-update1; SGH-T959 Build/ECLAIR)
-Host: xml.weather.com
-Connection: Keep-Alive
-

@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 25 Mar 2015 14:04:57 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 54
+Connection: keep-alive
+
+{"success": "ok","launch_policy":"0","tag_policy":"0"}

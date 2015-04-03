@@ -1,7 +1,0 @@
-GET /RealMedia/ads/Creatives/creative_repository/ywt/YWT_300x50_20100915.png HTTP/1.1
-content-type: text/plain;charset=ISO-8859-1
-accept: image/png;image/jpeg;image/gif
-User-Agent: Dalvik/1.1.0 (Linux; U; Android 2.1-update1; SGH-T959 Build/ECLAIR)
-Host: i.imwx.com
-Connection: Keep-Alive
-

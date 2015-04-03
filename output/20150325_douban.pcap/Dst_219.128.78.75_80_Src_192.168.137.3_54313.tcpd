@@ -1,0 +1,6 @@
+GET /view/presto/medium/public/t105854.jpg HTTP/1.1
+User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.4; MI 3 MIUI/5.3.20)
+Host: img3.douban.com
+Connection: Keep-Alive
+Accept-Encoding: gzip
+
