@@ -33,14 +33,14 @@ class Ethernet:
     def get_dst(self):
         s = list()
         for i in range(6):
-            s.append(base64.b16encode(self.dst[i:i + 1]))
-        return str(b":".join(s))[2:-1]
+            s.append(str(base64.b16encode(self.dst[i:i + 1])))
+        return str(":".join(s))[2:-1]
 
     def get_src(self):
         s = list()
         for i in range(6):
-            s.append(base64.b16encode(self.src[i:i + 1]))
-        return str(b":".join(s))[2:-1]
+            s.append(str(base64.b16encode(self.src[i:i + 1])))
+        return str(":".join(s))[2:-1]
 
     def get_type(self):
         g = globals()

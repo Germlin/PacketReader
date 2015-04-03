@@ -2,21 +2,14 @@
 
 __author__ = 'Reuynil'
 
-import os
-import types
-import collections
-import struct
-import sys
-import base64
-
 
 def test_bit(int_data, offset):
-    '''
-    测试某一位是否为1
+    """
+    测试某一位是否为1。
     :param int_data: int类型的数据
     :param offset: 要测试的位，最高位为7
-    :return:是1的时候返回True
-    '''
+    :return: 是1的时候返回True
+    """
     mask = 0b00000001 << offset
     return bool(int_data & mask)
 
@@ -26,28 +19,17 @@ def byte_to_int(byte_data):
     return res
 
 
-def get_filed(dataIn, byteOffset, bitOffset, length):
-    '''
+def get_filed(data_in, byte_offset, bit_offset, length):
+    """
     获取header指定的数据域，比如第四个字节的后四位。
-    Example:
-        If the data is 6128 (two byte in hex)，get_filed(data,0,0,8) will return 97(in decimal).
-        Because the arguments (0,0,8) mean the first byte of the data (61), the value of 61 in hex is 97 in decimal.
-    :param byteOffset: the begin position of the field in data. 0 means the filed begins with the first byte.
-    :param bitOffset: 数据域开始的位位置
-    :param length: 数据域的长度，按照bit计算
-    :return:int类型，不足一个字节的，在高位补0，然后再转成十进制,按字节计算
-    '''
-    byteLength = (length - (8 - bitOffset)) // 8 + 1
-    data = dataIn[byteOffset:(byteOffset + byteLength)]
-    mask = 2 ** (byteLength * 8 - bitOffset) - 1
-    data_int = int.from_bytes(data, byteorder='big', signed=False)  # base64.b16encode(data), 16)
+    :param byte_offset: 数据域开始的字节位置
+    :param bit_offset: 数据域开始的位位置
+    :param length: 数据域的长度，按照位计算
+    :return: int类型，不足一个字节的，在高位补0，然后再转成十进制,按字节计算。
+    """
+    byte_length = (length - (8 - bit_offset)) // 8 + 1
+    data = data_in[byte_offset:(byte_offset + byte_length)]
+    mask = 2 ** (byte_length * 8 - bit_offset) - 1
+    data_int = int.from_bytes(data, byteorder='big', signed=False)
     res = data_int & mask
     return res
-
-
-def get_path():
-    src_path = sys.path[0]
-    program_path = os.path.abspath(os.path.join(src_path, os.pardir))
-    input_path = os.path.join(program_path, 'input')
-    output_path = os.path.join(program_path, 'output')
-    return (src_path, input_path, output_path)
