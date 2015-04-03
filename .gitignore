@@ -1,4 +1,4 @@
 input/*
 output/*
 .idea/*
-ProtocolReverse/__pycache__/*
+*.pyc
