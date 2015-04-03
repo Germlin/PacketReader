@@ -1,10 +1,8 @@
 # -*- encoding=utf-8 -*-
 
-from utility import *
-from pcapreader import *
 import base64
 
-__author__ = 'Reuynil'
+__author__ = 'linyue'
 
 # Ethernet payload types - http://standards.ieee.org/regauth/ethertype
 ETH_TYPE_PUP = 0x0200  # PUP protocol
@@ -25,31 +23,31 @@ ETH_TYPE_PPPoE = 0x8864  # PPP Over Ethernet Session Stage
 ETH_TYPE_LLDP = 0x88CC  # Link Layer Discovery Protocol
 
 
-class ethernet:
+class Ethernet:
     def __init__(self, packet):
-        self.__data = packet.getData()
+        self.__data = packet.get_data()
         self.dst = self.__data[0:6]
         self.src = self.__data[6:12]
         self.type = self.__data[12:14]
 
-    def getDst(self):
+    def get_dst(self):
         s = list()
         for i in range(6):
             s.append(base64.b16encode(self.dst[i:i + 1]))
         return str(b":".join(s))[2:-1]
 
-    def getSrc(self):
+    def get_src(self):
         s = list()
         for i in range(6):
             s.append(base64.b16encode(self.src[i:i + 1]))
         return str(b":".join(s))[2:-1]
 
-    def getType(self):
+    def get_type(self):
         g = globals()
         for k, v in list(g.items()):
             if k.startswith('ETH_TYPE_') and v == int.from_bytes(self.type, byteorder='big', signed=False):
                 return k
         return None
 
-    def getData(self):
+    def get_data(self):
         return self.__data[14:]
