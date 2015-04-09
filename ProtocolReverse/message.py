@@ -8,42 +8,6 @@ import gzip
 from abc import ABCMeta, abstractclassmethod
 
 
-class TokenPattern:
-    def __init__(self, mes):
-        assert isinstance(mes, Message)
-        self.tpl = list()
-        self.dst = mes.destination
-        self.src = mes.source
-        for x in mes.token_list:
-            tp = x.type
-            self.tpl.append(tp)
-
-    def __eq__(self, other):
-        if isinstance(other, TokenPattern):
-            if self.dst != other.dst or self.src != other.dst:
-                return False
-            else:
-                x_l = len(self.tpl)
-                y_l = len(other.tpl)
-                if x_l != y_l:
-                    return False
-                else:
-                    index = 0
-                    while index < x_l:
-                        if self.tpl[index] != other.tpl[index]:
-                            return False
-                        index += 1
-                return True
-        else:
-            raise TypeError()
-
-    def __hash__(self):
-        t = self.dst + self.src
-        for i in self.tpl:
-            t = t + i
-        return int.from_bytes(t.encode(), byteorder='big')
-
-
 class Message(object):
     def __init__(self, t_token_list, t_destination=None, t_source=None):
         """
@@ -163,6 +127,39 @@ class Direction(Character):
         sd = self.d.replace('.', '').replace(':', '')
         ss = self.s.replace('.', '').replace(':', '')
         return int(ss + sd)
+
+
+class TokenPattern(Character):
+    def __init__(self, mes):
+        super().__init__(mes)
+        self.tpl = list()
+        for x in mes.token_list:
+            self.tpl.append(x.type)
+
+    def __eq__(self, other):
+        if isinstance(other, TokenPattern):
+            x_l = len(self.tpl)
+            y_l = len(other.tpl)
+            if x_l != y_l:
+                return False
+            else:
+                index = 0
+                while index < x_l:
+                    if self.tpl[index] != other.tpl[index]:
+                        return False
+                        index += 1
+                return True
+        else:
+            raise TypeError()
+
+    def __hash__(self):
+        t = 0
+        for i in self.tpl:
+            if i == 'T':
+                t = t*10 + 1
+            else:
+                t = t*10 + 0
+        return t
 
 
 class MessageSet:

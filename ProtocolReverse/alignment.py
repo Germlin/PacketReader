@@ -7,10 +7,10 @@ from numpy import *
 
 def needleman_wunsch_alignment(seq_1, seq_2):
     """
-
-    :param seq_1:
-    :param seq_2:
-    :return:
+    Needleman-Wunsch算法是用来计算两个序列的公共序列。
+    :param seq_1: 要对比的序列A，要求类型为列表，元素必须重载了__eq__函数。
+    :param seq_2: 要对比的序列B，要求同上。
+    :return: 最长公共序列长度，最长公共序列
     """
     seq_1_len = len(seq_1)
     seq_2_len = len(seq_2)
@@ -24,22 +24,24 @@ def needleman_wunsch_alignment(seq_1, seq_2):
             else:
                 mx[i][j] = max(mx[i - 1][j - 1], mx[i - 1][j], mx[i][j - 1])
 
-    res_seq1=list()
-    res_seq2=list()
+    lcs = 0
+    new_seq = list()
 
     # 开始回溯
     i = seq_1_len
     j = seq_2_len
-    while not (i == 0 and j == 0):
-        if seq_1[i - 1] == seq_2[j - 1]:
-            i -= 1
-            j -= 1
-        elif i == 0:
+    while i or j:
+        if i == 0:
             j -= 1
         elif j == 0:
             i -= 1
+        elif seq_1[i - 1] == seq_2[j - 1]:
+            lcs += 1
+            new_seq.append(seq_1[i - 1])
+            i -= 1
+            j -= 1
         else:
-            t = (mx[i - 1][j - 1], mx[i - 1][j], mx[j - 1][i])
+            t = (mx[i - 1][j - 1], mx[i - 1][j], mx[i][j - 1])
             max_value = max(t)
             index = t.index(max_value)
             if index == 0:
@@ -50,7 +52,13 @@ def needleman_wunsch_alignment(seq_1, seq_2):
             elif index == 2:
                 j -= 1
 
+    new_seq.reverse()
+    return lcs, new_seq
 
 
+def smith_waterman_alignment(seq_1,seq_2):
+    pass
 
 
+def upmga():
+    pass
