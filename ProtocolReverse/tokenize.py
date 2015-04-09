@@ -3,8 +3,6 @@
 __author__ = 'linyue'
 
 import utility
-import tcp
-import message
 
 
 class Token:
@@ -117,11 +115,3 @@ def tokenization(data, text_threshold=4):
                 last_token_type = data_token[begin].type
         index += 1
     return res
-
-
-def tokenize_tcp(tcp_datagram):
-    assert isinstance(tcp_datagram, tcp.TcpDatagram)
-    token_list = tokenization(tcp_datagram.get_data())
-    t_message = message.Message(token_list, tcp_datagram.get_dst_socket(),
-                                tcp_datagram.get_src_socket())
-    return t_message

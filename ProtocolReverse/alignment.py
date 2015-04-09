@@ -66,9 +66,9 @@ def needleman_wunsch_alignment(seq_1, seq_2):
 def smith_waterman_alignment(seq_1, seq_2):
     """
     Smith-Waterman算法，用于计算两个序列之间的距离。
-    :param seq_1:
-    :param seq_2:
-    :return:
+    :param seq_1: 用于比较的序列
+    :param seq_2: 用于比较的序列
+    :return: 返回得分。
     """
     seq_1_len = len(seq_1)
     seq_2_len = len(seq_2)

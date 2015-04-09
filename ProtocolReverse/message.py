@@ -5,10 +5,12 @@ __author__ = 'linyue'
 import tokenize
 import re
 import gzip
+import tcp
 from abc import ABCMeta, abstractclassmethod
 
 
 class Message(object):
+
     def __init__(self, t_token_list, t_destination=None, t_source=None):
         """
         消息包括记号列表和方向。
@@ -174,3 +176,13 @@ class MessageSet:
             在不同的聚类阶段，这个参数的类型可以不同，比如由记号模式变成长度等等。
         """
         self.characteristics = characteristics
+
+
+
+
+def tokenize_tcp(tcp_datagram):
+    assert isinstance(tcp_datagram, tcp.TcpDatagram)
+    token_list = tokenize.tokenization(tcp_datagram.get_data())
+    t_message = Message(token_list, tcp_datagram.get_dst_socket(),
+                                tcp_datagram.get_src_socket())
+    return t_message
