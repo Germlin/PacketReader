@@ -14,15 +14,6 @@ class Token:
         self.variable = t_variable
         self.separator = True if t_decoded_data in self.SEPARATOR else False
 
-    # def __eq__(self, other):
-    #     if isinstance(other, Token):
-    #         if self.type == other.type and self.variable == other.variable:
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         raise TypeError()
-
     def __str__(self):
         return "type:\t" + self.type + "\ndata:\t" + repr(self.data)
 

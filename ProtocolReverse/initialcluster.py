@@ -13,8 +13,8 @@ def cluster_by_direction(message_list):
     """
     res = dict()
     for t in message_list:
-        direction = message.Direction(t)
-        if dir not in res.keys():
+        direction = t.direction()
+        if direction not in res.keys():
             res[direction] = list()
         res[direction].append(t)
     return res
