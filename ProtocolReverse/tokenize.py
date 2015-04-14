@@ -8,14 +8,16 @@ import utility
 class Token:
     SEPARATOR = [" ", "\r", "\n"]  # 分隔符
 
-    def __init__(self, t_data, t_type='B', t_variable=True, t_decoded_data=None):
+    def __init__(self, t_data, t_type='B', t_decoded_data=None):
         self.data = t_data
         self.type = t_type
-        self.variable = t_variable
         self.separator = True if t_decoded_data in self.SEPARATOR else False
 
     def __str__(self):
         return "type:\t" + self.type + "\ndata:\t" + repr(self.data)
+
+    def __eq__(self, other):
+        return True if self.data == other.data else False
 
 
 def tokenize_by_byte(data):

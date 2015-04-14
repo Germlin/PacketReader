@@ -90,7 +90,7 @@ class Message:
     def direction(self):
         return Direction(self.destination, self.source)
 
-    def token_pattern(self):
+    def pattern(self):
         return TokenPattern(self.token_list)
 
     def compressed(self):
@@ -146,14 +146,35 @@ class Message:
 
 
 class MessageSet:
-    def __init__(self, characteristics):
+    def __init__(self, cluster_list):
         """
-        消息集合，集合里的元素类型为Message，同一个消息集合里的Message具有共同的特点，这个特点由character
-        决定，character是一个类对象，这个类对象描述了该集合里面Message具有的特征，character要求具有一个
-        __eq__(self,other)函数和一个get_character(self,message)函数以保证：1.message可以获取到该集合
-        需要的特性；2.这个特性可以对比，以确定消息是否属于这个集合。
-        参数：
-            characteristics是一个类对象，代表了这个消息集的特征。
-            在不同的聚类阶段，这个参数的类型可以不同，比如由记号模式变成长度等等。
+        消息集合，集合里的元素类型为MessageCluster，同一个消息集合里的MessageCluster具有共同的特征。
         """
-        self.characteristics = characteristics
+        self.cluster_list = cluster_list
+        self.index = 0
+
+    def size(self):
+        return len(self.cluster_list)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index -= 1
+        return self.cluster_list[self.index + 1]
+
+    def __getitem__(self, item):
+        return self.cluster_list[item]
+
+
+class MessageCluster:
+    def __init__(self):
+        pass
+
+    def __getitem__(self, item):
+        pass
+
+    def size(self):
+        pass
