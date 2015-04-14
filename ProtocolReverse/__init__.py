@@ -11,3 +11,4 @@ import tokenize
 import message
 import initialcluster
 import alignment
+import distance

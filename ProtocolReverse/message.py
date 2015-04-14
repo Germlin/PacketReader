@@ -170,11 +170,18 @@ class MessageSet:
 
 
 class MessageCluster:
-    def __init__(self):
-        pass
+    def __init__(self, message_list):
+        self.set = message_list
+        self.index = 0
 
-    def __getitem__(self, item):
-        pass
+    def __iter__(self):
+        return set
+
+    def next(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index -= 1
+        return self.set[self.index + 1]
 
     def size(self):
-        pass
+        return len(self.set)
