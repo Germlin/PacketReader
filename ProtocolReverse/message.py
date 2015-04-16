@@ -78,19 +78,18 @@ class TokenPattern(Character):
 
 
 class Message:
-    def __init__(self, destination=None,source=None,data=None,token_list=None):
+    def __init__(self, destination=None, source=None, data=None):
         self.destination = destination
         self.source = source
         self.data = data
-        self.token_list = token_list
+        self.token_list = tokenize.tokenization(data)
 
     @classmethod
-    def from_tcp_datagram(cls,tcp_datagram):
+    def from_tcp_datagram(cls, tcp_datagram):
         destination = tcp_datagram.get_dst_socket
         source = tcp_datagram.get_dst_socket
         data = tcp_datagram.get_data()
-        token_list = tokenize.tokenization(data)
-        return Message(destination,source,data,token_list)
+        return Message(destination, source, data)
 
     # 注意，这里可能会有Bug，因为我们只比较了数据，而忽略了方向。
     def __eq__(self, other):
@@ -154,6 +153,20 @@ class Message:
         return uncompress_data
 
 
+class MessageIterator:
+    def __init__(self, data):
+        self.d = data
+        self.l = len(data)
+        self.i = 0
+
+    def __next__(self):
+        if self.i == self.l:
+            raise StopIteration
+        else:
+            self.i += 1
+            return self.d[self.i - 1]
+
+
 class MessageSet:
     def __init__(self, cluster_list):
         """
@@ -166,13 +179,7 @@ class MessageSet:
         return len(self.cluster_list)
 
     def __iter__(self):
-        return self
-
-    def next(self):
-        if self.index == 0:
-            raise StopIteration
-        self.index -= 1
-        return self.cluster_list[self.index + 1]
+        return MessageIterator(self.cluster_list)
 
     def __getitem__(self, item):
         return self.cluster_list[item]
@@ -184,13 +191,7 @@ class MessageCluster:
         self.index = 0
 
     def __iter__(self):
-        return set
-
-    def next(self):
-        if self.index == 0:
-            raise StopIteration
-        self.index -= 1
-        return self.set[self.index + 1]
+        return MessageIterator(self.set)
 
     def size(self):
         return len(self.set)

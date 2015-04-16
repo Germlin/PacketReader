@@ -20,18 +20,22 @@ class Distance:
         c1_num = c1.size()
         c2_num = c2.size()
         score = 0
+        # print("id:", id(c1), id(c2))
         for i in c1:
+            print("i", id(i))
             for j in c2:
+                print("j", id(j))
                 score += alignment.smith_waterman_alignment(i.token_list, j.token_list)
         return score / (c1_num + c2_num)
 
     def _compute_distance_matrix(self):
         for i in range(0, self.cluster_num):
             for j in range(i, self.cluster_num):
+                print(i, id(self.set[i]), j, id(self.set[j]))
                 self.matrix[i][j] = self._compute_distance(self.set[i], self.set[j])
                 if self.matrix[i][j] < self.min:
                     self.min = self.matrix[i][j]
                     self.min_index = (i, j)
 
     def min(self):
-        return (self.min, self.min_index)
+        return self.min, self.min_index
