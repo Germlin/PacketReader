@@ -78,12 +78,21 @@ class TokenPattern(Character):
 
 
 class Message:
-    def __init__(self, tcp_datagram):
-        self.destination = tcp_datagram.get_dst_socket
-        self.source = tcp_datagram.get_dst_socket
-        self.data = tcp_datagram.get_data()
-        self.token_list = tokenize.tokenization(self.data)
+    def __init__(self, destination=None,source=None,data=None,token_list=None):
+        self.destination = destination
+        self.source = source
+        self.data = data
+        self.token_list = token_list
 
+    @classmethod
+    def from_tcp_datagram(cls,tcp_datagram):
+        destination = tcp_datagram.get_dst_socket
+        source = tcp_datagram.get_dst_socket
+        data = tcp_datagram.get_data()
+        token_list = tokenize.tokenization(data)
+        return Message(destination,source,data,token_list)
+
+    # 注意，这里可能会有Bug，因为我们只比较了数据，而忽略了方向。
     def __eq__(self, other):
         return True if self.data == other.data else False
 
