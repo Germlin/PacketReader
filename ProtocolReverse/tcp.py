@@ -60,7 +60,6 @@ class TCP:
         reserved = 0
         protocol = ip.IP_PROTO_TCP
 
-
     def get_src_port(self):
         return self.fields["SrcPort"]
 
@@ -99,6 +98,9 @@ class TCP:
 
     def test_fin(self):
         return utility.test_bit(self.fields["Flags"], 0)
+
+    def test_psh(self):
+        return utility.test_bit(self.fields["Flags"], 3)
 
     @staticmethod
     def reassemble_tcp(pcap):
@@ -145,5 +147,9 @@ class TCP:
 
                     if tcp_segment.test_fin():
                         seg_next += 1
+
+                    if tcp_segment.test_psh():
+                        res.append(TcpDatagram(k, data))
+                        data = b''
             res.append(TcpDatagram(k, data))
         return res
