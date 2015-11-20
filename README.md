@@ -10,4 +10,5 @@ PyPcap是一个解析Pcap文件的模块。test文件夹是测试模块，也可
 
 ## 当前进度
 
-1. 正在编写Pcap类，获取每一个Packet。
+1. 考虑要不要添加一个输出header的函数。
+2. 正在编写Pcap类，获取每一个Packet。
