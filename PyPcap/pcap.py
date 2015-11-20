@@ -1,16 +1,22 @@
 # -*- encoding=utf-8 -*-
 
-__author__ = 'linyue'
-
 import os
 import collections
 import base64
 import struct
+from packet import BasicPacket
 
 
-class PcapHeader:
+class PcapHeader(BasicPacket):
+    _pcap_header_ = (
+        ('Magic', "4I", 4),
+        ('minor', "2I", 2),
+        ("major", "2I", 2),
+        ('ThisZone', '4I', 4)
+
+    )
+
     def __init__(self, pcap_file):
-        self.field = collections.OrderedDict()
         pcap_file.seek(0, 0)
         self.field['Magic'] = pcap_file.read(4)
         self.field['Major'] = pcap_file.read(2)
@@ -48,27 +54,36 @@ class PacketHeader:
         return temp_str
 
 
-class PcapFile:
+class Pcap(BasicPacket):
+
+    _pcap_header_structure = (
+        ('Magic', 'I', 4),
+        ('Minor', 'H', 2),
+        ('Major', 'H', 2),
+        ('ThisZone', 'I', 4),
+        ('SignFigs', 'I', 4),
+        ('SanpLen', 'I', 4),
+        ('LinkType', 'I', 4),
+    )
+
     def __init__(self, file_name):
-        self.__pcapLength = int(os.path.getsize(file_name))
-        self.__pcapFile = open(file_name, 'rb')
-        self.__pcapHeader = PcapHeader(self.__pcapFile)
-        self.__packet = self._get_packet()
+        super(Pcap,self).__init__(self._pcap_header_)
+        self._pcap_file_ = open(file_name, 'rb')
+        self._pcap_header_ = self.parse(self._pcap_file_.read(self._header_length_))
+        self._packet_ = self._get_packet_()
+        self._pcap_length_ = int(os.path.getsize(file_name))
 
-    def __len__(self):
-        return self.__pcapLength
-
-    def get_pcap_header(self):
-        return self.__pcapHeader
+    def pcap_header(self):
+        return self._pcap_header_
 
     def __del__(self):
-        self.__pcapFile.close()
+        self._pcap_file_.close()
 
-    def _get_packet(self):
+    def _get_packet_(self):
         res = list()
         whence = 24
         index = 0
-        while whence < self.__pcapLength:
+        while whence < self._pcap_length_:
             header = PacketHeader(self.__pcapFile, whence)
             data_length = header.get_packet_length()
             data = self.__pcapFile.read(data_length)

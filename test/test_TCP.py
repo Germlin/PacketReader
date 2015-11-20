@@ -1,6 +1,6 @@
 __author__ = 'Reuynil'
 
-import ProtocolReverse
+import PyPcap
 import os
 import sys
 
@@ -12,8 +12,8 @@ if __name__ == '__main__':
     output_path = os.path.join(program_path, 'output')
     input_file = os.path.join(input_path, file_name)
 
-    pcap_file = ProtocolReverse.pcapreader.PcapFile(input_file)
-    res = ProtocolReverse.tcp.TCP.reassemble_tcp(pcap_file)
+    pcap_file = PyPcap.pcapreader.PcapFile(input_file)
+    res = PyPcap.tcp.TCP.reassemble_tcp(pcap_file)
     data_path = os.path.join(output_path, file_name)
     os.makedirs(data_path, exist_ok=True)
     for t in res:

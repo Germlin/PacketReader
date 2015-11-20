@@ -2,7 +2,7 @@
 
 __author__ = 'linyue'
 
-import ProtocolReverse
+import PyPcap
 import os
 import sys
 
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     output_path = os.path.join(program_path, 'output')
     input_file = os.path.join(input_path, file_name)
 
-    pcap_file = ProtocolReverse.pcapreader.PcapFile(input_file)
-    ip_list = ProtocolReverse.ip.IP.reassemble_ip(pcap_file)
+    pcap_file = PyPcap.pcapreader.PcapFile(input_file)
+    ip_list = PyPcap.ip.IP.reassemble_ip(pcap_file)
     print(len(ip_list))
     print(ip_list[0].dst)

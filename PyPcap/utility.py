@@ -1,6 +1,6 @@
 # -*- encoding=utf-8 -*-
 
-__author__ = 'Reuynil'
+import struct
 
 
 def test_bit(int_data, offset):
