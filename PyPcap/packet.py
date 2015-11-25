@@ -28,3 +28,7 @@ class BasicPacket(object):
                 ls_len = int(x[1][0])
                 self.header[x[0]] = lst[index:index + ls_len]
                 index += ls_len
+
+
+class PacketTypeError(Exception):
+    pass

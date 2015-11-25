@@ -11,11 +11,11 @@ class Packet(BasicPacket):
         ('Length', 'I', 4),
     )
 
-    def __init__(self, header, eth_type):
+    def __init__(self, header, link_type):
         super(Packet, self).__init__(self._packet_header_structure_)
         self._parse_header_(header, order='S')
         self.data = b''
-        self.type = eth_type
+        self.link_type = link_type
 
     def packet_length(self):
         return self.header['CaptureLength']
@@ -40,7 +40,7 @@ class Pcap(BasicPacket):
         file.seek(0, 0)
         self._parse_header_(self._pcap_file_.read(self._header_length_), order='S')
         self.packets = list()
-        whence = 24
+        whence = self._header_length_
         while whence < self._pcap_length_:
             packet = Packet(self._pcap_file_.read(16), self.header['LinkType'])
             data_length = packet.packet_length()
@@ -48,7 +48,3 @@ class Pcap(BasicPacket):
             self.packets.append(packet)
             whence = whence + data_length + 16
         self.packets_num = len(self.packets)
-
-    def __del__(self):
-        self._pcap_file_.close()
-
