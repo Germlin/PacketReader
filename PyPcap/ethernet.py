@@ -5,7 +5,7 @@ from PyPcap.pcap import Pcap, Packet
 
 
 class EthernetPacket(BasicPacket):
-    _Ethernet_header_structure = (
+    _Ethernet_header_structure_ = (
         ('destination', '6B', 6),
         ('source', '6B', 6),
         ('type', 'H', 2),
@@ -35,7 +35,7 @@ class EthernetPacket(BasicPacket):
         if packet.link_type != 0x01:
             raise PacketTypeError()
         else:
-            super(EthernetPacket, self).__init__(self._Ethernet_header_structure)
+            super(EthernetPacket, self).__init__(self._Ethernet_header_structure_)
             self._parse_header_(packet.data[0:self._header_length_])
             self.data = packet.data[self._header_length_:]
 

@@ -1,8 +1,7 @@
 # -*- encoding=utf-8 -*-
 
-__author__ = 'linyue'
-
-import PyPcap
+from PyPcap import *
+import unittest
 import os
 import sys
 
