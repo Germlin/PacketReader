@@ -29,6 +29,17 @@ class BasicPacket(object):
                 self.header[x[0]] = lst[index:index + ls_len]
                 index += ls_len
 
+    @staticmethod
+    def checksum(data):
+        check_sum = 0
+        length = len(data)
+        i = 0
+        while i < length:
+            check_sum += struct.unpack('!H', data[i:i + 2])[0]
+            i += 2
+        check_sum = (check_sum >> 16) + (check_sum & 0xffff)
+        return check_sum ^ 0xffff
+
 
 class PacketTypeError(Exception):
     pass
