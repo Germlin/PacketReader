@@ -153,3 +153,14 @@ class TCP:
                         data = b''
             res.append(TcpDatagram(k, data))
         return res
+
+
+def test_bit(int_data, offset):
+    """
+    测试某一位是否为1。
+    :param int_data: int类型的数据
+    :param offset: 要测试的位，最高位为7
+    :return: 是1的时候返回True
+    """
+    mask = 0b00000001 << offset
+    return bool(int_data & mask)

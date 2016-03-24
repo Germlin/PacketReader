@@ -11,7 +11,7 @@ class TestEthernet(unittest.TestCase):
 
 class TestEthernetPacket(unittest.TestCase):
     def setUp(self):
-        self.file = open(r"E:\PyPcap\test\test_pcap.pcap", 'rb')
+        self.file = open(r"E:\GitHub\PyPcap\test\test_pcap.pcap", 'rb')
         test_pcap = Pcap(self.file)
         test_packet = test_pcap.packets[13]
         self.test_eth_packet = EthernetPacket(test_packet)
@@ -31,12 +31,12 @@ class TestEthernetPacket(unittest.TestCase):
 
 class TestEthernet(unittest.TestCase):
     def setUp(self):
-        self.file = open(r"E:\PyPcap\test\test_pcap.pcap", 'rb')
+        self.file = open(r"E:\GitHub\PyPcap\test\test_pcap.pcap", 'rb')
         test_pcap = Pcap(self.file)
         self.test_eth = Ethernet(test_pcap)
 
     def testNum(self):
-        self.assertEqual(len(self.test_eth.eth_packets), 19)
+        self.assertEqual(len(self.test_eth.packets), 19)
 
 
 if __name__ == "__main__":
