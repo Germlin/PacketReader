@@ -237,7 +237,7 @@ class IP:
         :return: None。
         """
         self.ethernet_packets = []
-        res = []
+        self.ip_datagrams = []
         work_list = {}
         for packet in ethernet_packets:
             #temp_eth = Ethernet(packet)
@@ -254,29 +254,27 @@ class IP:
                             value.append(temp_ip)
                             work_list[temp_ip_id] = value
                     else:  # 不能分片
-                        res.append(
+                        self.ip_datagrams.append(
                             IpDatagram(
                                 temp_ip.header['SRC'], temp_ip.header['DST'], temp_ip.header['PTO'], temp_ip.data()))
 
-        # 算法思想来自于文档 RFC815
+        # 算法思想来自于文档 RFC815, 漏洞描述符算法
         for key in work_list:
             temp_ip_list = work_list[key]
-            temp_dst = temp_ip_list[0].get_dst()
-            temp_src = temp_ip_list[0].get_src()
-            temp_protocol = temp_ip_list[0].get_protocol()
-            temp_data = dict()
-            hole_descriptor_list = list()
-            hole_descriptor_list.append(dict(first=0, last=1048576))
+            temp_dst = temp_ip_list[0].header['DST']
+            temp_src = temp_ip_list[0].header['SRC']
+            temp_protocol = temp_ip_list[0].header['PTO']
+            temp_data = {}
+            hole_descriptor_list = [dict(first=0, last=1048576)]
             for fragment in temp_ip_list:
-                assert isinstance(fragment, IP)
-                fragment_first = fragment.get_offset()
-                fragment_last = fragment.get_offset() + (fragment.get_total_length() - fragment.get_header_length())
+                fragment_first = fragment.offset
+                fragment_last = fragment.offset + (fragment.total_lenght - fragment.header_length)
                 for hole in hole_descriptor_list:
                     hole_first = hole["first"]
                     hole_last = hole["last"]
                     if fragment_first <= hole_last and fragment_last >= hole_first:
                         hole_descriptor_list.remove(hole)
-                        temp_data[fragment_first] = fragment.get_data()
+                        temp_data[fragment_first] = fragment.data
                         if fragment_first > hole_first:
                             new_hole = dict(first=hole_first, last=fragment_first - 1)
                             hole_descriptor_list.append(new_hole)
@@ -287,12 +285,11 @@ class IP:
                 data = b''
                 for k in sorted(temp_data.keys()):
                     data = data + temp_data[k]
-                res.append(IpDatagram(temp_dst, temp_src, temp_protocol, data))
+                self.ip_datagrams.append(IpDatagram(temp_dst, temp_src, temp_protocol, data))
             else:
-                res.append(IpDatagram(None, None, None, None, False))
-        return res
+                self.ip_datagrams.append(IpDatagram(None, None, None, None, False))
 
-
+"""
     def reassemble_ip(self):
         res = list()
         work_list = dict()
@@ -348,3 +345,4 @@ class IP:
             else:
                 res.append(IpDatagram(None, None, None, None, False))
         return res
+        """

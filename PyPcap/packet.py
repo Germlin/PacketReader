@@ -40,6 +40,13 @@ class BasicPacket(object):
         check_sum = (check_sum >> 16) + (check_sum & 0xffff)
         return check_sum ^ 0xffff
 
+    @staticmethod
+    def print_ip(data):
+        s = list()
+        for i in data:
+            s.append(oct(i))
+        return str(".".join(s))
+
 
 class PacketTypeError(Exception):
     pass
