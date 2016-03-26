@@ -23,19 +23,19 @@ ETH_TYPE = {
     'ETH_TYPE_LLDP': 0x88CC,  # Link Layer Discovery Protocol'''
 }
 
+_Ethernet_header_structure_ = (
+    ('destination', '6B', 6),
+    ('source', '6B', 6),
+    ('type', 'H', 2),
+)
+
 
 class EthernetPacket(BasicPacket):
-    _Ethernet_header_structure_ = (
-        ('destination', '6B', 6),
-        ('source', '6B', 6),
-        ('type', 'H', 2),
-    )
-
     def __init__(self, packet):
         if packet.link_type != 0x01:
             raise PacketTypeError()
         else:
-            super(EthernetPacket, self).__init__(self._Ethernet_header_structure_)
+            super(EthernetPacket, self).__init__(_Ethernet_header_structure_)
             self._parse_header_(packet.data[0:self._header_length_])
             self.data = packet.data[self._header_length_:]
 
@@ -61,34 +61,11 @@ class EthernetPacket(BasicPacket):
 class Ethernet:
     def __init__(self, pcap_file):
         assert type(pcap_file) == Pcap
-        self.packets = {}
+        self.packets = []
         for p in pcap_file.packets:
             try:
                 ep = EthernetPacket(p)
             except PacketTypeError:
                 pass
             else:
-                #k = (ep.fmt_src(), ep.fmt_dst(), ep.fmt_type())
-                k=(ep.header['source'],ep.header['destination'],ep.header['type'])
-                if k not in self.packets.keys():
-                    v = [ep]
-                    self.packets[k] = v
-                else:
-                    self.packets[k].append(ep)
-
-    def filter(self, **kwargs):
-        res = {}
-        for (epk, epv) in self.packets.items():
-            flag = True
-            for (k, v) in kwargs.items():
-                if k == 'SRC_MAC':
-                    flag = flag and epk[0] == v
-                elif k == 'DST_MAC':
-                    flag = flag and epk[1] == v
-                elif k == 'TYPE':
-                    flag = flag and epk[2] == v
-                else:
-                    flag = False
-            if flag:
-                res[epk] = epv
-        return res
+                self.packets.append(ep)

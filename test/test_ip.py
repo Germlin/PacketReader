@@ -1,19 +1,54 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap import *
+
+from PyPcap.ip import *
 import unittest
-import os
-import sys
+
+
+class TestIPPacket(unittest.TestCase):
+    def setUp(self):
+        self.file = open(r"test_ping_ip_reassemble.pcap", 'rb')
+        test_pcap = Pcap(self.file)
+        test_packet = test_pcap.packets[0]
+        test_eth_packet = EthernetPacket(test_packet)
+        self.test_ip_packet = IPPacket(test_eth_packet.data)  # 我觉得，上面的构造函数也是要加.data的，但是我不知道为什么上面的就是不用。
+
+    def testSource(self):
+        self.assertEqual(self.test_ip_packet.header['SRC'], (172, 18, 158, 159))
+
+    def testDestination(self):
+        self.assertEqual(self.test_ip_packet.header['DST'], (202, 116, 64, 8))
+
+    def testProtocol(self):
+        self.assertEqual(self.test_ip_packet.fmt_protocol, 'IP_PROTO_ICMP')
+
+    def testFragment(self):
+        self.assertEqual(self.test_ip_packet.more_fragment, True)
+
+    def testTotalLength(self):
+        self.assertEqual(self.test_ip_packet.total_length, 1500)
+
+    def testHeaderLength(self):
+        self.assertEqual(self.test_ip_packet.header_length, 20)
+
+    def testDataLength(self):
+        self.assertEqual(len(self.test_ip_packet.data), 1480)
+
+    def tearDown(self):
+        self.file.close()
+
+
+class TestIP(unittest.TestCase):
+    def setUp(self):
+        self.file = open(r"test_ping_ip_reassemble.pcap", 'rb')
+        test_pcap = Pcap(self.file)
+        test_ethernet = Ethernet(test_pcap)
+        self.test_ip = IP(test_ethernet.packets)
+
+    def testIPReassemble(self):
+        self.assertEqual(len(self.test_ip.ip_datagrams), 4)
+        self.assertEqual(len(self.test_ip.ip_datagrams[0].data), 10248)
+
 
 if __name__ == '__main__':
-    file_name = "test_ping_ip_reassemble.pcap"
-    test_path = sys.path[0]
-    program_path = os.path.abspath(os.path.join(test_path, os.pardir))
-    input_path = os.path.join(program_path, 'input')
-    output_path = os.path.join(program_path, 'output')
-    input_file = os.path.join(input_path, file_name)
-
-    pcap_file = PyPcap.pcapreader.PcapFile(input_file)
-    ip_list = PyPcap.ip.IP.reassemble_ip(pcap_file)
-    print(len(ip_list))
-    print(ip_list[0].dst)
+    unittest.main()
