@@ -11,13 +11,13 @@ class TestIPPacket(unittest.TestCase):
         test_pcap = Pcap(self.file)
         test_packet = test_pcap.packets[0]
         test_eth_packet = EthernetPacket(test_packet)
-        self.test_ip_packet = IPPacket(test_eth_packet.data)  # 我觉得，上面的构造函数也是要加.data的，但是我不知道为什么上面的就是不用。
+        self.test_ip_packet = IPPacket(test_eth_packet)
 
     def testSource(self):
-        self.assertEqual(self.test_ip_packet.header['SRC'], (172, 18, 158, 159))
+        self.assertEqual(self.test_ip_packet.fmt_src, "172.18.158.159")
 
     def testDestination(self):
-        self.assertEqual(self.test_ip_packet.header['DST'], (202, 116, 64, 8))
+        self.assertEqual(self.test_ip_packet.fmt_dst, "202.116.64.8")
 
     def testProtocol(self):
         self.assertEqual(self.test_ip_packet.fmt_protocol, 'IP_PROTO_ICMP')
@@ -38,16 +38,19 @@ class TestIPPacket(unittest.TestCase):
         self.file.close()
 
 
-class TestIP(unittest.TestCase):
+class TestIPReassemble(unittest.TestCase):
     def setUp(self):
         self.file = open(r"test_ping_ip_reassemble.pcap", 'rb')
         test_pcap = Pcap(self.file)
         test_ethernet = Ethernet(test_pcap)
-        self.test_ip = IP(test_ethernet.packets)
+        self.test_ip_datagrams = ip_reassemble(test_ethernet.packets)
 
     def testIPReassemble(self):
-        self.assertEqual(len(self.test_ip.ip_datagrams), 4)
-        self.assertEqual(len(self.test_ip.ip_datagrams[0].data), 10248)
+        self.assertEqual(len(self.test_ip_datagrams), 4)
+        self.assertEqual(len(self.test_ip_datagrams[0].data), 10248)
+
+    def tearDown(self):
+        self.file.close()
 
 
 if __name__ == '__main__':

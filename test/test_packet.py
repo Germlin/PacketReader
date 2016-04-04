@@ -7,7 +7,7 @@ from PyPcap.packet import BasicPacket
 
 class TestBasicPacket(unittest.TestCase):
     _data_structure_ = (
-        ('INT', 'I', 4),
+        ('INT', 'I', 4),    #（‘数据域名’，‘个数+类型’，总长度）
         ('SHORT', 'H', 2),
         ('CHAR', '2B', 2),
         ('CHK', 'H', 2),

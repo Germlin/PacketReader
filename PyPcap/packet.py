@@ -41,10 +41,12 @@ class BasicPacket(object):
         return check_sum ^ 0xffff
 
     @staticmethod
-    def print_ip(data):
+    def format_ip(ip):
         s = list()
-        for i in data:
-            s.append(oct(i))
+        while ip:
+            tmp = ip % 256
+            s.insert(0,str(tmp))
+            ip //= 256
         return str(".".join(s))
 
 

@@ -1,12 +1,7 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap.pcap import *
 from PyPcap.ethernet import *
 import unittest
-
-
-class TestEthernet(unittest.TestCase):
-    pass
 
 
 class TestEthernetPacket(unittest.TestCase):

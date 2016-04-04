@@ -1,7 +1,6 @@
 # -*- encoding=utf-8 -*-
 
 from PyPcap.ethernet import *
-from PyPcap.pcap import *
 
 _IP_PROTOCOL_ = {
     # Protocol (ip_p) - http://www.iana.org/assignments/protocol-numbers
@@ -154,8 +153,8 @@ _IP_header_structure_ = (
     ('TTL', 'B', 1),
     ('PTO', 'B', 1),
     ('CKS', 'H', 2),
-    ('SRC', '4B', 4),
-    ('DST', '4B', 4),
+    ('SRC', 'I', 4),
+    ('DST', 'I', 4),
 )
 
 
@@ -171,27 +170,33 @@ class IpDatagram:
 class IPPacket(BasicPacket):
     def __init__(self, pt):
         super(IPPacket, self).__init__(_IP_header_structure_)
-        self._parse_header_(pt[0:self._header_length_])
-        self.check_sum = self.checksum(pt[0:self._header_length_])
-        self.data = pt[self.header_length:self.total_length]
+        self._parse_header_(pt.data[0:self._header_length_])
+        self.check_sum = self.checksum(pt.data[0:self._header_length_])
+        self.data = pt.data[self.header_length:self.total_length]
 
     @property
     def version(self):
         return self.header['VL'] >> 4
 
     @property
+    def dst_ip(self):
+        return self.header['DST']
+
+    @property
+    def src_ip(self):
+        return self.header['SRC']
+
+    @property
+    def protocol(self):
+        return self.header['PTO']
+
+    @property
     def fmt_dst(self):
-        s = list()
-        for i in self.header['DST']:
-            s.append(str(i))
-        return str(".".join(s))
+        return self.format_ip(self.dst_ip)
 
     @property
     def fmt_src(self):
-        s = list()
-        for i in self.header['SRC']:
-            s.append(str(i))
-        return str(".".join(s))
+        return self.format_ip(self.src_ip)
 
     @property
     def fmt_protocol(self):
@@ -225,61 +230,58 @@ class IPPacket(BasicPacket):
         return bool(self.header['OFF'] & 0x2000)
 
 
-class IP:
-    def __init__(self, ethernet_packets):
-        """
-        传入一组的EthernetPacket类型的数据包，_init__会检查它们是不是IP数据包，并将其中的IP数据包放到self.packets中。
-        """
-        self.packets = []
-        self.ip_datagrams = []
-        work_list = {}
-        for packet in ethernet_packets:
-            if packet.header['type'] == 0x0800:  # 判断是不是ip数据报
-                temp_ip = IPPacket(packet.data)
-                self.packets.append(temp_ip)
-                # if temp_ip.test_checksum() or temp_ip.fields["Checksum"] == 0:  # 判断ip数据报是不是有错误
-                if temp_ip.header['CKS'] == 0:
-                    if not temp_ip.do_not_fragment:
-                        temp_ip_id = temp_ip.header['ID']
-                        if temp_ip_id in work_list:
-                            work_list[temp_ip_id].append(temp_ip)
-                        else:
-                            value = list()
-                            value.append(temp_ip)
-                            work_list[temp_ip_id] = value
-                    else:  # 不能分片
-                        self.ip_datagrams.append(
-                                IpDatagram(
-                                        temp_ip.header['SRC'], temp_ip.header['DST'], temp_ip.header['PTO'],
-                                        temp_ip.data()))
+def ip_reassemble(ethernet_packets):
+    """
+    传入一组的EthernetPacket类型的数据包，_init__会检查它们是不是IP数据包，并将其中的IP数据包放到self.packets中。
+    """
+    packets = []
+    ip_datagrams = []
+    work_list = {}
+    for packet in ethernet_packets:
+        if packet.header['type'] == 0x0800:  # 判断是不是ip数据报
+            temp_ip = IPPacket(packet)
+            packets.append(temp_ip)
+            if temp_ip.check_sum == 0 or temp_ip.header['CKS'] == 0:
+                if not temp_ip.do_not_fragment:
+                    temp_ip_id = temp_ip.id
+                    if temp_ip_id in work_list:
+                        work_list[temp_ip_id].append(temp_ip)
+                    else:
+                        value = list()
+                        value.append(temp_ip)
+                        work_list[temp_ip_id] = value
+                else:  # 不能分片
+                    ip_datagrams.append(
+                        IpDatagram(temp_ip.src_ip, temp_ip.dst_ip, temp_ip.protocol, temp_ip.data))
 
-        # 算法思想来自于文档 RFC815, 漏洞描述符算法
-        for key in work_list:
-            temp_ip_list = work_list[key]
-            temp_dst = temp_ip_list[0].header['DST']
-            temp_src = temp_ip_list[0].header['SRC']
-            temp_protocol = temp_ip_list[0].header['PTO']
-            temp_data = {}
-            hole_descriptor_list = [dict(first=0, last=1048576)]
-            for fragment in temp_ip_list:
-                fragment_first = fragment.offset
-                fragment_last = fragment.offset + (fragment.total_length - fragment.header_length)
-                for hole in hole_descriptor_list:
-                    hole_first = hole["first"]
-                    hole_last = hole["last"]
-                    if fragment_first <= hole_last and fragment_last >= hole_first:
-                        hole_descriptor_list.remove(hole)
-                        temp_data[fragment_first] = fragment.data
-                        if fragment_first > hole_first:
-                            new_hole = dict(first=hole_first, last=fragment_first - 1)
-                            hole_descriptor_list.append(new_hole)
-                        if fragment_last < hole_last and fragment.more_fragment:
-                            new_hole = dict(first=fragment_last + 1, last=hole_last)
-                            hole_descriptor_list.append(new_hole)
-            if len(hole_descriptor_list) == 0:
-                data = b''
-                for k in sorted(temp_data.keys()):
-                    data = data + temp_data[k]
-                self.ip_datagrams.append(IpDatagram(temp_dst, temp_src, temp_protocol, data))
-            else:
-                self.ip_datagrams.append(IpDatagram(None, None, None, None, False))
+    # 算法思想来自于文档 RFC815, 漏洞描述符算法
+    for key in work_list:
+        temp_ip_list = work_list[key]
+        temp_dst = temp_ip_list[0].dst_ip
+        temp_src = temp_ip_list[0].src_ip
+        temp_protocol = temp_ip_list[0].protocol
+        temp_data = {}
+        hole_descriptor_list = [dict(first=0, last=1048576)]
+        for fragment in temp_ip_list:
+            fragment_first = fragment.offset
+            fragment_last = fragment.offset + (fragment.total_length - fragment.header_length)
+            for hole in hole_descriptor_list:
+                hole_first = hole["first"]
+                hole_last = hole["last"]
+                if fragment_first <= hole_last and fragment_last >= hole_first:
+                    hole_descriptor_list.remove(hole)
+                    temp_data[fragment_first] = fragment.data
+                    if fragment_first > hole_first:
+                        new_hole = dict(first=hole_first, last=fragment_first - 1)
+                        hole_descriptor_list.append(new_hole)
+                    if fragment_last < hole_last and fragment.more_fragment:
+                        new_hole = dict(first=fragment_last + 1, last=hole_last)
+                        hole_descriptor_list.append(new_hole)
+        if len(hole_descriptor_list) == 0:
+            data = b''
+            for k in sorted(temp_data.keys()):
+                data = data + temp_data[k]
+            ip_datagrams.append(IpDatagram(temp_dst, temp_src, temp_protocol, data))
+        else:
+            ip_datagrams.append(IpDatagram(None, None, None, None, False))
+    return ip_datagrams
