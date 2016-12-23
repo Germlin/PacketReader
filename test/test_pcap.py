@@ -1,6 +1,6 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap.pcap import Pcap, Packet
+from PyPcapAnalyzer.pcap import Pcap, Packet
 import unittest
 
 

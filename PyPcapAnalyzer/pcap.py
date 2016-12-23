@@ -1,6 +1,6 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap.packet import BasicPacket
+from PyPcapAnalyzer.packet import BasicPacket
 
 
 class Packet(BasicPacket):

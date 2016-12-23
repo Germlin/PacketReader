@@ -1,6 +1,6 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap.ip import *
+from PyPcapAnalyzer.ip import *
 
 _TCP_header_structure_ = (
     ('SRC', 'H', 2),

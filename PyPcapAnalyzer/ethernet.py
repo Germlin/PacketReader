@@ -1,7 +1,7 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap.packet import *
-from PyPcap.pcap import Pcap, Packet
+from PyPcapAnalyzer.packet import *
+from PyPcapAnalyzer.pcap import Pcap, Packet
 
 # Ethernet payload types - http://standards.ieee.org/regauth/ethertype
 ETH_TYPE = {

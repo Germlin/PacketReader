@@ -2,7 +2,7 @@
 
 import unittest
 import struct
-from PyPcap.packet import BasicPacket
+from PyPcapAnalyzer.packet import BasicPacket
 
 
 class TestBasicPacket(unittest.TestCase):

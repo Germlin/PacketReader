@@ -1,6 +1,6 @@
 # -*- encoding=utf-8 -*-
 
-from PyPcap.ethernet import *
+from PyPcapAnalyzer.ethernet import *
 
 _IP_PROTOCOL_ = {
     # Protocol (ip_p) - http://www.iana.org/assignments/protocol-numbers

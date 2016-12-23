@@ -1,7 +1,7 @@
 # -*- encoding=utf-8 -*-
 
 
-from PyPcap.ip import *
+from PyPcapAnalyzer.ip import *
 import unittest
 
 
