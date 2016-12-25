@@ -98,7 +98,12 @@ class Packet:
             + "[1] Epoch Time: %d.%d seconds\n" % (self.packet_header['TSS'], self.packet_header['TSM']) \
             + "[2] Frame Length: %d bytes\n" % (self.packet_header['LEN']) \
             + "[3] Destination Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['DST'])) \
-            + "[4] Source Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['SRC']))
+            + "[4] Source Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['SRC'])) \
+            + "[5] Destination IP Address: %s\n" % (self.ip_address_format(self.ip_header['DST'])) \
+            + "[6] Source IP Address: %s\n" % (self.ip_address_format(self.ip_header['SRC'])) \
+            + "[7] Destination Port: %s\n" % (self.tcp_header['DST']) \
+            + "[8] Source Port :%s\n" % (self.tcp_header['SRC']) \
+            + "[9] Protocol: %d\n" % (self.ip_header['PTO'])
 
 
 class PacketTypeError(Exception):

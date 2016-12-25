@@ -18,15 +18,17 @@ class TestPacket(unittest.TestCase):
         file_name = r"E:\GitHub\PyPcapAnalyzer\tests\test.pcap"
         self.packet = PyPcapAnalyzer.read_pcap(file_name)[0]
 
+    def test_timestamp(self):
+        self.assertEqual(self.packet.packet_header['TSS'], 1448157839)
+        self.assertEqual(self.packet.packet_header['TSM'], 796592)
+
 
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(TestPcap('test_packet_num'))
+    suite.addTest(TestPacket('test_timestamp'))
     return suite
 
 
 if __name__ == "__main__":
-    file_name = r"E:\GitHub\PyPcapAnalyzer\tests\test.pcap"
-    packet = PyPcapAnalyzer.read_pcap(file_name)[0]
-    print(packet)
     unittest.main(defaultTest='suite')
