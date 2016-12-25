@@ -24,8 +24,8 @@ def read_pcap(file_name):
                     if packet.ip_header['PTO'] == 6:
                         packet.tcp_header = parse_header(file.read(20), TCP_HEADER)
                         packet.tcp_header_format()
-                    else if packet.ip_header['PTO'] == 17:
-                        packet.udp_header = parse_header(file.read(), UDP_HEADER)
+                    elif packet.ip_header['PTO'] == 17:
+                        packet.udp_header = parse_header(file.read(8), UDP_HEADER)
                     else:
                         raise PacketTypeError()
                 else:

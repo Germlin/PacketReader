@@ -2,53 +2,59 @@
 
 import struct
 
-
 PCAP_HEADER = (
-    ('MAG', 'I'),    # magic number
-    ('MAJ', 'H'),    # majic number
-    ('MIN', 'H'),    # minor number
-    ('TIZ', 'I'),    # time zone
-    ('SIG', 'I'),    # timestamp
-    ('LEN', 'I'),    # snapshot length
-    ('LTY', 'I'),    # type of link-layer
+    ('MAG', 'I'),  # magic number
+    ('MAJ', 'H'),  # majic number
+    ('MIN', 'H'),  # minor number
+    ('TIZ', 'I'),  # time zone
+    ('SIG', 'I'),  # timestamp
+    ('LEN', 'I'),  # snapshot length
+    ('LTY', 'I'),  # type of link-layer
 )
 
 PACKET_HEADER = (
-    ('TSS', 'I'),    # timestamp in second
-    ('TSM', 'I'),    # timestamp in microsecond
-    ('CLEN', 'I'),   # length of packet data that were caputure
-    ('LEN', 'I'),    # the actual length of the packet
+    ('TSS', 'I'),  # timestamp in second
+    ('TSM', 'I'),  # timestamp in microsecond
+    ('CLEN', 'I'),  # length of packet data that should be captured
+    ('LEN', 'I'),  # the actual length of the packet
 )
 
 ETHERNET_HEADER = (
-    ('DST', '6s'),   # destination MAC address
-    ('SRC', '6s'),   # source MAC addr
-    ('PTO', 'H'),    # protocol of network-layer
+    ('DST', '6s'),  # destination MAC address
+    ('SRC', '6s'),  # source MAC addr
+    ('PTO', 'H'),  # protocol of network-layer
 )
 
 IP_HEADER = (
-    ('VL', 'B'),     # version and length of header
-    ('TOS', 'B'),    # type of services
-    ('LEN', 'H'),    # length of the packet
-    ('ID', 'H'),     # identification of the packet
-    ('OFF', 'H'),    # offset of the segment
-    ('TTL', 'B'),    # time to live
-    ('PTO', 'B'),    # protocol of transport layer
-    ('CKS', 'H'),    # checksum
-    ('SRC', '4s'),    # source IP address
-    ('DST', '4s'),    # destination IP address
+    ('VL', 'B'),  # version and length of header
+    ('TOS', 'B'),  # type of services
+    ('LEN', 'H'),  # length of the packet
+    ('ID', 'H'),  # identification of the packet
+    ('OFF', 'H'),  # offset of the segment
+    ('TTL', 'B'),  # time to live
+    ('PTO', 'B'),  # protocol of transport layer
+    ('CKS', 'H'),  # checksum
+    ('SRC', '4s'),  # source IP address
+    ('DST', '4s'),  # destination IP address
 )
 
 TCP_HEADER = (
-    ('SRC', 'H'),    # source port
-    ('DST', 'H'),    # destination port
-    ('SEQ', 'I'),    # sequence number
-    ('ACK', 'I'),    # acknowledgment number
-    ('LEN', 'B'),    # data offset
-    ('FLG', 'B'),    # flags
-    ('WIN', 'H'),    # window size
-    ('CKS', 'H'),    # checksum
-    ('URP', 'H'),    # urgent pointer
+    ('SRC', 'H'),  # source port
+    ('DST', 'H'),  # destination port
+    ('SEQ', 'I'),  # sequence number
+    ('ACK', 'I'),  # acknowledgment number
+    ('LEN', 'B'),  # data offset
+    ('FLG', 'B'),  # flags
+    ('WIN', 'H'),  # window size
+    ('CKS', 'H'),  # checksum
+    ('URP', 'H'),  # urgent pointer
+)
+
+UDP_HEADER = (
+    ('SRC', 'H'),  # source port
+    ('DST', 'H'),  # destination port
+    ('LEN', 'H'),  # length of packet
+    ('CKS', 'H'),  # checksum
 )
 
 
@@ -76,11 +82,23 @@ class Packet:
             self.tcp_header['URG'] = (self.tcp_header['FLG'] & (0b00000001 << 5)) >> 5
             self.tcp_header.pop('FLG')
 
+    @staticmethod
     def ip_address_format(ip):
-        return '.'.join( [ "%d" % x for x in bins ] )
+        return '.'.join(["%d" % x for x in ip])
 
+    @staticmethod
     def mac_address_format(mac):
-        return ':'.join( [ "%02X" % x for x in mac ] )
+        return ':'.join(["%02X" % x for x in mac])
+
+    def quintuple(self):
+        pass
+
+    def __repr__(self):
+        return "Packet Information: \n"  \
+            + "[1] Epoch Time: %d.%d seconds\n" % (self.packet_header['TSS'], self.packet_header['TSM']) \
+            + "[2] Frame Length: %d bytes\n" % (self.packet_header['LEN']) \
+            + "[3] Destination Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['DST'])) \
+            + "[4] Source Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['SRC']))
 
 
 class PacketTypeError(Exception):
