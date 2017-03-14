@@ -1,13 +1,13 @@
 # -*- encoding=utf-8 -*-
 
-import PyPcapAnalyzer
+import PacketReader
 import unittest
 
 
 class TestPcap(unittest.TestCase):
     def setUp(self):
         file_name = r"E:\GitHub\PyPcapAnalyzer\tests\test.pcap"
-        self.packets = PyPcapAnalyzer.read_pcap(file_name)
+        self.packets = PacketReader.read_pcap(file_name)
 
     def test_packet_num(self):
         self.assertEqual(len(self.packets), 179)
@@ -16,7 +16,7 @@ class TestPcap(unittest.TestCase):
 class TestPacket(unittest.TestCase):
     def setUp(self):
         file_name = r"E:\GitHub\PyPcapAnalyzer\tests\test.pcap"
-        self.packet = PyPcapAnalyzer.read_pcap(file_name)[0]
+        self.packet = PacketReader.read_pcap(file_name)[0]
 
     def test_timestamp(self):
         self.assertEqual(self.packet.packet_header['TSS'], 1448157839)

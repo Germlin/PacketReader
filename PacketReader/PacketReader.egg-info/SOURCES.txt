@@ -1,0 +1,9 @@
+README.rst
+setup.py
+PacketReader/__init__.py
+PacketReader/packet.py
+PacketReader/pcap.py
+PacketReader.egg-info/PKG-INFO
+PacketReader.egg-info/SOURCES.txt
+PacketReader.egg-info/dependency_links.txt
+PacketReader.egg-info/top_level.txt
