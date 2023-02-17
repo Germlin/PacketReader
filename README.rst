@@ -21,7 +21,7 @@ Usage
 2. Read from a pcap file. ``read_pcap`` return a list of packets.
 ::
 
-  packets = PyPcapAnalyzer.read_pcap(pcap_file)
+  packets = PacketReader.read_pcap(pcap_file)
 
 3. You can print the information of each packet.
 ::
@@ -38,6 +38,7 @@ Usage
 Example
 -------
 ::
+
     >>> import PacketReader
     >>> pl=PacketReader.read_pcap('test.pcap')
     >>> print(len(pl))

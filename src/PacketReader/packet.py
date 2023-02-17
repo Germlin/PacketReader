@@ -59,6 +59,14 @@ UDP_HEADER = (
 
 
 class Packet:
+    """
+    Packet provide functions to parse ip packets or tcp packets.
+    """
+    def __init__(self):
+        self.ip_header = None
+        self.tcp_header = None
+        self.udp_header = None
+
     def ip_header_format(self):
         if self.ip_header is None:
             raise AttributeError()
@@ -92,6 +100,9 @@ class Packet:
 
     @property
     def quintuple(self):
+        if self.ip_header is None:
+            raise ArithmeticError()
+        
         src_ip = self.ip_address_format(self.ip_header['SRC'])
         dst_ip = self.ip_address_format(self.ip_header['DST'])
         if self.tcp_header is not None:
@@ -114,10 +125,6 @@ class Packet:
             + "[7] Destination Port: %s\n" % (self.tcp_header['DST']) \
             + "[8] Source Port :%s\n" % (self.tcp_header['SRC']) \
             + "[9] Protocol: %d\n" % (self.ip_header['PTO'])
-
-
-class PacketTypeError(Exception):
-    pass
 
 
 def parse_header(header_data, header_structure, order='B'):

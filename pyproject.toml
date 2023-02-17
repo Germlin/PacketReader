@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "packetreader"
+version = "0.2.0"
+description = "A pcap file parser"
+authors = ["yuellin <linyue92@outlook.com>"]
+license = "MIT"
+readme = "README.rst"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
