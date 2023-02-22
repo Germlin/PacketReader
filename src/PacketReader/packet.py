@@ -91,20 +91,20 @@ class Packet:
             self.tcp_header.pop('FLG')
 
     @staticmethod
-    def ip_address(ip):
+    def ip_address_format(ip):
         return '.'.join(["%d" % x for x in ip])
 
     @staticmethod
-    def mac_address(mac):
+    def mac_address_format(mac):
         return ':'.join(["%02X" % x for x in mac])
 
     @property
     def quintuple(self):
         if self.ip_header is None:
-            raise ArithmeticError()
+            raise AttributeError()
         
-        src_ip = self.ip_address_format(self.ip_header['SRC'])
-        dst_ip = self.ip_address_format(self.ip_header['DST'])
+        src_ip = self.src_ip_address
+        dst_ip = self.dst_ip_address
         if self.tcp_header is not None:
             src_port = self.tcp_header['SRC']
             dst_port = self.tcp_header['DST']
@@ -113,13 +113,29 @@ class Packet:
             dst_port = self.udp_header['DST']
         protocol = self.ip_header['PTO']
         return src_ip, src_port, dst_ip, dst_port, protocol
+        
+    @property
+    def src_mac_address(self):
+        return self.mac_address_format(self.ethernet_header['SRC'])
+
+    @property
+    def dst_mac_address(self):
+        return self.mac_address_format(self.ethernet_header['DST'])
+
+    @property
+    def src_ip_address(self):
+        return self.ip_address_format(self.ip_header['SRC'])
+        
+    @property
+    def dst_ip_address(self):
+        return self.ip_address_format(self.ip_header['DST'])
 
     def __repr__(self):
         return "Packet %d Information: \n" % (self.id)  \
             + "[1] Epoch Time: %d.%d seconds\n" % (self.packet_header['TSS'], self.packet_header['TSM']) \
             + "[2] Frame Length: %d bytes\n" % (self.packet_header['LEN']) \
-            + "[3] Destination Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['DST'])) \
-            + "[4] Source Mac Address: %s\n" % (self.mac_address_format(self.ethernet_header['SRC'])) \
+            + "[3] Destination Mac Address: %s\n" % (self.dst_mac_address) \
+            + "[4] Source Mac Address: %s\n" % (self.src_mac_address) \
             + "[5] Destination IP Address: %s\n" % (self.ip_address_format(self.ip_header['DST'])) \
             + "[6] Source IP Address: %s\n" % (self.ip_address_format(self.ip_header['SRC'])) \
             + "[7] Destination Port: %s\n" % (self.tcp_header['DST']) \

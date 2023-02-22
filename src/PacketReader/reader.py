@@ -1,7 +1,7 @@
 # -*- encoding=utf-8 -*-
 
-from .packet import *
-
+from PacketReader.packet import *
+from PacketReader.exception import PacketTypeError
 
 def read_pcap(file_name):
     packets = []
@@ -30,11 +30,11 @@ def read_pcap(file_name):
                     elif packet.ip_header['PTO'] == 17:
                         packet.udp_header = parse_header(file.read(8), UDP_HEADER)
                     else:
-                        raise PacketTypeError()
+                        raise PacketTypeError("PacketReader can only parse tcp or udp packet.")
                 else:
-                    raise PacketTypeError()
+                    raise PacketTypeError("PacketReader can only parse ip packet.")
             else:
-                raise PacketTypeError()
+                raise PacketTypeError("PacketReader can only parse ethernet packet.")
             data_length = packet.packet_header['CLEN']
             packets.append(packet)
             whence = whence + data_length + 16

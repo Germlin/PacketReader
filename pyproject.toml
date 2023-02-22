@@ -1,10 +1,13 @@
 [tool.poetry]
-name = "packetreader"
+name = "PacketReader"
 version = "0.2.0"
 description = "A pcap file parser"
 authors = ["yuellin <linyue92@outlook.com>"]
 license = "MIT"
 readme = "README.rst"
+packages = [
+    { include = "PacketReader", from = "src" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"

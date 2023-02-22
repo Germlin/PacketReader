@@ -1,7 +1,7 @@
 PacketReader
 ============
 
-A ``pcap`` file parser implemented by Python. ``libpcap`` is not needed for this package.
+A ``pcap`` file parser implemented by Python. Only supports TCP and UDP packet.
 
 Installation
 ------------
@@ -28,10 +28,10 @@ Usage
 
   print(packets[0])
 
-4. PacketReader supports IP/TCP/UDP. You can get the MAC address, IP address and flags of packets.
+4. PacketReader supports IP/TCP/UDP. You can get the MAC address, IP address or flags of packets.
 ::
 
-    print(packets[0].mac_address)
+    print(packets[0].src_mac_address)
     print(packets[0].tcp_header['SYN'])
 
 
